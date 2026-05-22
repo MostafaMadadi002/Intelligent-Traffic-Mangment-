@@ -112,11 +112,11 @@ export default function Navigation() {
               className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[70] md:hidden"
             />
             <motion.nav
-              initial={{ x: '-100%' }}
+              initial={{ x: '100%' }}
               animate={{ x: 0 }}
-              exit={{ x: '-100%' }}
+              exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed left-0 top-0 h-full w-72 glass-dark text-white p-6 flex flex-col z-[80] md:hidden border-r border-white/10"
+              className="fixed right-0 top-0 h-full w-72 glass-dark text-white p-6 flex flex-col z-[80] md:hidden border-l border-white/10"
             >
               <div className="flex items-center gap-3 mb-10 px-2 mt-4">
                 <div className="w-8 h-8 bg-cyan-500 rounded-lg flex items-center justify-center font-bold text-xl shadow-[0_0_20px_rgba(6,182,212,0.5)]">T</div>
