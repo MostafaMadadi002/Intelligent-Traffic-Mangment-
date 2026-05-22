@@ -1,0 +1,6 @@
+{
+  "name": "Intelligent Traffic Management",
+  "description": "A smart city platform for real-time traffic monitoring, automated signal control, and urban congestion analytics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,85 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Admin users for the traffic management platform",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "description": "Admin email" },
+        "role": { "type": "string", "description": "User role (admin/operator)", "enum": ["admin", "operator"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["email", "role"]
+    },
+    "Camera": {
+      "title": "Camera",
+      "description": "Traffic monitoring camera configuration",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "location": { "type": "string" },
+        "status": { "type": "string", "enum": ["active", "inactive"] },
+        "videoUrl": { "type": "string" },
+        "coordinates": {
+          "type": "object",
+          "properties": {
+            "lat": { "type": "number" },
+            "lng": { "type": "number" }
+          }
+        }
+      },
+      "required": ["name", "videoUrl"]
+    },
+    "TrafficLog": {
+      "title": "Traffic Log",
+      "description": "Historical traffic data for a camera",
+      "type": "object",
+      "properties": {
+        "cameraId": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "vehicleCounts": {
+          "type": "object",
+          "properties": {
+            "car": { "type": "number" },
+            "motorcycle": { "type": "number" },
+            "truck": { "type": "number" },
+            "bus": { "type": "number" }
+          }
+        },
+        "density": { "type": "number", "description": "Traffic density percentage (0-100)" },
+        "congestionLevel": { "type": "string", "enum": ["low", "medium", "high"] }
+      },
+      "required": ["cameraId", "timestamp", "vehicleCounts", "density"]
+    },
+    "SignalLog": {
+      "title": "Signal Log",
+      "description": "Logs of signal state changes",
+      "type": "object",
+      "properties": {
+        "cameraId": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" },
+        "state": { "type": "string", "enum": ["red", "yellow", "green"] },
+        "duration": { "type": "number", "description": "Duration assigned in seconds" },
+        "mode": { "type": "string", "enum": ["auto", "manual"] }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Private user profiles"
+    },
+    "/cameras/{cameraId}": {
+      "schema": "Camera",
+      "description": "Registered traffic cameras"
+    },
+    "/traffic_logs/{logId}": {
+      "schema": "TrafficLog",
+      "description": "Historical traffic metrics"
+    },
+    "/signal_logs/{logId}": {
+      "schema": "SignalLog",
+      "description": "Historical signal adjustments"
+    }
+  }
+}
