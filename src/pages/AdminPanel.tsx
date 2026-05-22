@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Camera, Plus, Trash2, Edit2, Shield, Settings, Database, Activity } from 'lucide-react';
+import { Camera, Plus, Trash2, Edit2, Shield, Settings, Database, Activity, Search } from 'lucide-react';
 import { motion } from 'motion/react';
 import api from '../lib/api';
 
 export default function AdminPanel() {
   const [cameras, setCameras] = useState<any[]>([]);
   const [newCam, setNewCam] = useState({ name: '', location: '', videoUrl: '' });
+  const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -30,6 +31,11 @@ export default function AdminPanel() {
       setLoading(false);
     }
   };
+
+  const filteredCameras = cameras.filter(cam => 
+    cam.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    cam.location?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to remove this camera?')) return;
@@ -63,15 +69,28 @@ export default function AdminPanel() {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
         <div className="xl:col-span-2 space-y-6">
           <div className="glass rounded-3xl shadow-2xl overflow-hidden border border-white/10">
-            <div className="p-8 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
-              <h3 className="text-lg font-bold flex items-center gap-3">
-                <Camera size={20} className="text-cyan-400" />
-                System Nodes
-              </h3>
-              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{cameras.length} Active Modules</span>
+            <div className="p-8 border-b border-white/5 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white/[0.02]">
+              <div className="flex items-center gap-3">
+                <h3 className="text-lg font-bold flex items-center gap-3">
+                  <Camera size={20} className="text-cyan-400" />
+                  System Nodes
+                </h3>
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{filteredCameras.length} Active Modules</span>
+              </div>
+              
+              <div className="relative group w-full md:w-64">
+                <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-cyan-400 transition-colors" />
+                <input 
+                  type="text"
+                  placeholder="Search nodes or sectors..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-11 pr-4 py-2.5 glass-dark rounded-xl text-xs font-medium focus:outline-none focus:ring-1 focus:ring-cyan-500/50 transition-all border border-white/5"
+                />
+              </div>
             </div>
             <div className="divide-y divide-white/5">
-              {cameras.map(cam => (
+              {filteredCameras.map(cam => (
                 <div key={cam.id} className="p-6 flex items-center justify-between hover:bg-white/5 transition-all group">
                   <div className="flex items-center gap-5">
                     <div className="w-14 h-14 glass-dark rounded-2xl flex items-center justify-center text-slate-500 group-hover:text-cyan-400 transition-colors">
