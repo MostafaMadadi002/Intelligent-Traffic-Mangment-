@@ -87,7 +87,7 @@ export default function Navigation() {
   return (
     <>
       {/* Mobile Header Toggle */}
-      <div className="md:hidden fixed top-0 left-0 right-0 h-16 glass-dark border-b border-white/5 px-6 flex items-center justify-between z-[60]">
+      <div className="md:hidden fixed top-0 left-0 right-0 h-16 glass-dark border-b border-white/5 px-6 flex items-center flex-row-reverse justify-between z-[60]">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-cyan-500 rounded-lg flex items-center justify-center font-bold text-xl">T</div>
           <h1 className="font-bold text-lg tracking-tight uppercase">TrafficFlow</h1>
@@ -112,11 +112,11 @@ export default function Navigation() {
               className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[70] md:hidden"
             />
             <motion.nav
-              initial={{ x: '100%' }}
+              initial={{ x: "-100%" }}
               animate={{ x: 0 }}
-              exit={{ x: '100%' }}
+              exit={{ x: "-100%" }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 h-full w-72 glass-dark text-white p-6 flex flex-col z-[80] md:hidden border-l border-white/10"
+              className="fixed left-0 top-0 h-full w-72 glass-dark text-white p-6 flex flex-col z-[80] md:hidden border-r border-white/10"
             >
               <div className="flex items-center gap-3 mb-10 px-2 mt-4">
                 <div className="w-8 h-8 bg-cyan-500 rounded-lg flex items-center justify-center font-bold text-xl shadow-[0_0_20px_rgba(6,182,212,0.5)]">T</div>
