@@ -99,18 +99,18 @@ export default function SignalControl() {
                   animate={{ 
                     backgroundColor: signal.state === 'red' ? '#ef4444' : '#0f172a',
                     boxShadow: signal.state === 'red' 
-                      ? '0 0 35px rgba(239, 68, 68, 0.6), inset 0 0 10px rgba(255,255,255,0.2)' 
+                      ? '0 0 40px rgba(239, 68, 68, 0.7), inset 0 0 10px rgba(255,255,255,0.2)' 
                       : 'inset 0 4px 6px rgba(0,0,0,0.4)',
-                    scale: signal.state === 'red' ? [1.05, 1.12, 1.05] : 0.95,
-                    opacity: signal.state === 'red' ? 1 : 0.4
+                    scale: signal.state === 'red' ? [1.05, 1.15, 1.05] : 0.95,
+                    opacity: signal.state === 'red' ? 1 : 0.3
                   }}
                   transition={{ 
-                    backgroundColor: { duration: 0.6 },
-                    boxShadow: { duration: 0.6 },
-                    opacity: { duration: 0.6 },
+                    backgroundColor: { duration: 0.8, ease: "easeInOut" },
+                    boxShadow: { duration: 0.8, ease: "easeInOut" },
+                    opacity: { duration: 0.8, ease: "easeInOut" },
                     scale: signal.state === 'red' 
-                      ? { duration: 1.5, repeat: Infinity, ease: "easeInOut" } 
-                      : { duration: 0.4 }
+                      ? { duration: 2, repeat: Infinity, ease: "easeInOut" } 
+                      : { duration: 0.6, ease: "easeOut" }
                   }}
                   className="w-16 h-16 rounded-full relative" 
                 />
@@ -119,18 +119,18 @@ export default function SignalControl() {
                   animate={{ 
                     backgroundColor: signal.state === 'yellow' ? '#fbbf24' : '#0f172a',
                     boxShadow: signal.state === 'yellow' 
-                      ? '0 0 35px rgba(251, 191, 36, 0.6), inset 0 0 10px rgba(255,255,255,0.2)' 
+                      ? '0 0 40px rgba(251, 191, 36, 0.7), inset 0 0 10px rgba(255,255,255,0.2)' 
                       : 'inset 0 4px 6px rgba(0,0,0,0.4)',
-                    scale: signal.state === 'yellow' ? [1.05, 1.12, 1.05] : 0.95,
-                    opacity: signal.state === 'yellow' ? 1 : 0.4
+                    scale: signal.state === 'yellow' ? [1.05, 1.15, 1.05] : 0.95,
+                    opacity: signal.state === 'yellow' ? 1 : 0.3
                   }}
                   transition={{ 
-                    backgroundColor: { duration: 0.6 },
-                    boxShadow: { duration: 0.6 },
-                    opacity: { duration: 0.6 },
+                    backgroundColor: { duration: 0.8, ease: "easeInOut" },
+                    boxShadow: { duration: 0.8, ease: "easeInOut" },
+                    opacity: { duration: 0.8, ease: "easeInOut" },
                     scale: signal.state === 'yellow' 
-                      ? { duration: 1.5, repeat: Infinity, ease: "easeInOut" } 
-                      : { duration: 0.4 }
+                      ? { duration: 2, repeat: Infinity, ease: "easeInOut" } 
+                      : { duration: 0.6, ease: "easeOut" }
                   }}
                   className="w-16 h-16 rounded-full relative" 
                 />
@@ -139,18 +139,18 @@ export default function SignalControl() {
                   animate={{ 
                     backgroundColor: signal.state === 'green' ? '#10b981' : '#0f172a',
                     boxShadow: signal.state === 'green' 
-                      ? '0 0 35px rgba(16, 185, 129, 0.6), inset 0 0 10px rgba(255,255,255,0.2)' 
+                      ? '0 0 40px rgba(16, 185, 129, 0.7), inset 0 0 10px rgba(255,255,255,0.2)' 
                       : 'inset 0 4px 6px rgba(0,0,0,0.4)',
-                    scale: signal.state === 'green' ? [1.05, 1.12, 1.05] : 0.95,
-                    opacity: signal.state === 'green' ? 1 : 0.4
+                    scale: signal.state === 'green' ? [1.05, 1.15, 1.05] : 0.95,
+                    opacity: signal.state === 'green' ? 1 : 0.3
                   }}
                   transition={{ 
-                    backgroundColor: { duration: 0.6 },
-                    boxShadow: { duration: 0.6 },
-                    opacity: { duration: 0.6 },
+                    backgroundColor: { duration: 0.8, ease: "easeInOut" },
+                    boxShadow: { duration: 0.8, ease: "easeInOut" },
+                    opacity: { duration: 0.8, ease: "easeInOut" },
                     scale: signal.state === 'green' 
-                      ? { duration: 1.5, repeat: Infinity, ease: "easeInOut" } 
-                      : { duration: 0.4 }
+                      ? { duration: 2, repeat: Infinity, ease: "easeInOut" } 
+                      : { duration: 0.6, ease: "easeOut" }
                   }}
                   className="w-16 h-16 rounded-full relative" 
                 />
