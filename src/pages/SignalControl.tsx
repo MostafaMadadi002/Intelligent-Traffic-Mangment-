@@ -61,12 +61,18 @@ export default function SignalControl() {
                 </div>
 
                 <div className="flex gap-4">
-                  <div className="flex-1 glass-dark p-4 rounded-2xl border border-white/5 flex flex-col items-center justify-center gap-1 group-hover:bg-white/5 transition-colors">
+                  <div className="flex-1 glass-dark p-4 rounded-2xl border border-white/5 flex flex-col items-center justify-center gap-1 group/tooltip relative group-hover:bg-white/5 transition-colors">
+                    <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-slate-900 border border-white/10 px-3 py-2 rounded-lg text-[10px] w-32 text-center pointer-events-none opacity-0 group-hover/tooltip:opacity-100 transition-opacity z-20 shadow-2xl">
+                      Next phase transition countdown
+                    </div>
                     <Timer size={18} className="text-slate-500" />
                     <span className="text-2xl font-black text-white font-mono">{signal.duration}s</span>
                     <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Cycle Delta</span>
                   </div>
-                  <div className="flex-1 glass-dark p-4 rounded-2xl border border-white/5 flex flex-col items-center justify-center gap-1 group-hover:bg-white/5 transition-colors">
+                  <div className="flex-1 glass-dark p-4 rounded-2xl border border-white/5 flex flex-col items-center justify-center gap-1 group/tooltip relative group-hover:bg-white/5 transition-colors">
+                    <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-slate-900 border border-white/10 px-3 py-2 rounded-lg text-[10px] w-32 text-center pointer-events-none opacity-0 group-hover/tooltip:opacity-100 transition-opacity z-20 shadow-2xl">
+                      Real-time lane density (Neural)
+                    </div>
                     <Activity size={18} className="text-slate-500" />
                     <span className="text-2xl font-black text-cyan-400 font-mono">74%</span>
                     <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Current Load</span>
@@ -75,19 +81,25 @@ export default function SignalControl() {
 
                 <div className="grid grid-cols-3 gap-3">
                   {(['red', 'yellow', 'green'] as const).map(color => (
-                    <button
-                      key={color}
-                      onClick={() => handleManualOverride(camera.id, color)}
-                      className={`py-3.5 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transition-all relative overflow-hidden ${
-                        signal.state === color 
-                        ? (color === 'red' ? 'bg-red-500 text-white shadow-[0_0_20px_rgba(239,68,68,0.4)]' : 
-                           color === 'yellow' ? 'bg-amber-400 text-slate-950 shadow-[0_0_20px_rgba(251,191,36,0.4)]' : 
-                           'bg-emerald-500 text-white shadow-[0_0_20px_rgba(16,185,129,0.4)]')
-                        : 'bg-white/5 text-slate-500 hover:bg-white/10'
-                      }`}
-                    >
-                      {color}
-                    </button>
+                    <div key={color} className="relative group/tooltip">
+                      <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-900 border border-white/10 px-3 py-2 rounded-lg text-[10px] whitespace-nowrap pointer-events-none opacity-0 group-hover/tooltip:opacity-100 transition-opacity z-20 shadow-2xl">
+                        {color === 'red' ? 'Force stop all traffic' : 
+                         color === 'yellow' ? 'Initiate transition phase' : 
+                         'Authorize vehicle flow'}
+                      </div>
+                      <button
+                        onClick={() => handleManualOverride(camera.id, color)}
+                        className={`w-full py-3.5 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transition-all relative overflow-hidden ${
+                          signal.state === color 
+                          ? (color === 'red' ? 'bg-red-500 text-white shadow-[0_0_20px_rgba(239,68,68,0.4)]' : 
+                             color === 'yellow' ? 'bg-amber-400 text-slate-950 shadow-[0_0_20px_rgba(251,191,36,0.4)]' : 
+                             'bg-emerald-500 text-white shadow-[0_0_20px_rgba(16,185,129,0.4)]')
+                          : 'bg-white/5 text-slate-500 hover:bg-white/10'
+                        }`}
+                      >
+                        {color}
+                      </button>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -175,10 +187,15 @@ export default function SignalControl() {
                 Urban flow efficiency has stabilized at <span className="text-cyan-400 font-bold font-mono">+28.4%</span> across the northern corridor.
               </p>
           </div>
-          <button className="flex items-center gap-3 px-8 py-4 bg-white text-slate-950 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-cyan-400 transition-all active:scale-95 shadow-2xl">
-            <RefreshCw size={18} />
-            System Recalibrate
-          </button>
+          <div className="relative group/tooltip">
+            <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-slate-900 border border-white/10 px-4 py-2 rounded-xl text-[10px] w-48 text-center pointer-events-none opacity-0 group-hover/tooltip:opacity-100 transition-opacity z-20 shadow-2xl">
+              Reset neural timing models and synchronize intersection nodes
+            </div>
+            <button className="flex items-center gap-3 px-8 py-4 bg-white text-slate-950 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-cyan-400 transition-all active:scale-95 shadow-2xl">
+              <RefreshCw size={18} />
+              System Recalibrate
+            </button>
+          </div>
         </div>
       </div>
     </div>
