@@ -7,6 +7,8 @@ import api from '../lib/api';
 export default function TrafficMonitor() {
   const [cameras, setCameras] = useState<any[]>([]);
   const [selectedCamera, setSelectedCamera] = useState<any>(null);
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [locationFilter, setLocationFilter] = useState<string>('all');
   const [detection, setDetection] = useState<any>(null);
   const [history, setHistory] = useState<any[]>([]);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -29,27 +31,64 @@ export default function TrafficMonitor() {
     };
   }, [selectedCamera]);
 
+  const filteredCameras = cameras.filter(cam => {
+    const matchStatus = statusFilter === 'all' || cam.status === statusFilter;
+    const matchLocation = locationFilter === 'all' || cam.location === locationFilter;
+    return matchStatus && matchLocation;
+  });
+
+  const locations = Array.from(new Set(cameras.map(cam => cam.location))).filter(Boolean);
+
   return (
     <div className="space-y-8">
-      <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-4 border-b border-white/10">
-        <div>
+      <header className="flex flex-col xl:flex-row xl:items-center justify-between gap-6 py-4 border-b border-white/10">
+        <div className="flex flex-col gap-1">
           <h2 className="text-3xl font-light text-white">Live <span className="font-bold">Neural Monitoring</span></h2>
           <p className="text-slate-500 text-sm">Real-time object detection and lane segmentation across urban nodes.</p>
         </div>
-        <div className="flex gap-2 glass-dark p-1.5 rounded-2xl border border-white/5 shadow-2xl">
-          {cameras.map(cam => (
-            <button
-              key={cam.id}
-              onClick={() => setSelectedCamera(cam)}
-              className={`px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
-                selectedCamera?.id === cam.id 
-                ? 'bg-cyan-500 text-slate-950 shadow-[0_0_15px_rgba(6,182,212,0.5)]' 
-                : 'text-slate-400 hover:bg-white/5 hover:text-white'
-              }`}
+
+        <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+          <div className="flex gap-4 p-1 rounded-2xl bg-white/5 border border-white/10">
+            <select 
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="bg-transparent text-xs font-bold text-slate-300 px-3 py-2 outline-none cursor-pointer hover:text-white transition-colors uppercase tracking-widest"
             >
-              {cam.name}
-            </button>
-          ))}
+              <option value="all" className="bg-slate-900">All Status</option>
+              <option value="active" className="bg-slate-900">Active</option>
+              <option value="inactive" className="bg-slate-300 text-slate-900">Inactive</option>
+            </select>
+
+            <select 
+              value={locationFilter}
+              onChange={(e) => setLocationFilter(e.target.value)}
+              className="bg-transparent text-xs font-bold text-slate-300 px-3 py-2 outline-none cursor-pointer hover:text-white transition-colors uppercase tracking-widest border-l border-white/10"
+            >
+              <option value="all" className="bg-slate-900">All Locations</option>
+              {locations.map(loc => (
+                <option key={loc} value={loc} className="bg-slate-900">{loc}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex gap-2 glass-dark p-1.5 rounded-2xl border border-white/5 shadow-2xl overflow-x-auto max-w-full no-scrollbar">
+            {filteredCameras.map(cam => (
+              <button
+                key={cam.id}
+                onClick={() => setSelectedCamera(cam)}
+                className={`px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all whitespace-nowrap ${
+                  selectedCamera?.id === cam.id 
+                  ? 'bg-cyan-500 text-slate-950 shadow-[0_0_15px_rgba(6,182,212,0.5)]' 
+                  : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                }`}
+              >
+                {cam.name}
+              </button>
+            ))}
+            {filteredCameras.length === 0 && (
+              <span className="px-5 py-2.5 text-[10px] text-slate-500 font-bold uppercase tracking-widest italic">No nodes match filter</span>
+            )}
+          </div>
         </div>
       </header>
 
