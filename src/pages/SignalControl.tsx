@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Power, Timer, Activity, Zap, RefreshCw } from 'lucide-react';
+import { Power, Timer, Activity, Zap, RefreshCw, Search } from 'lucide-react';
 import { motion } from 'motion/react';
 import api from '../lib/api';
 import socket from '../lib/socket';
@@ -7,6 +7,7 @@ import socket from '../lib/socket';
 export default function SignalControl() {
   const [signals, setSignals] = useState<any>({});
   const [cameras, setCameras] = useState<any[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     Promise.all([
@@ -32,15 +33,33 @@ export default function SignalControl() {
     });
   };
 
+  const filteredCameras = cameras.filter(cam => 
+    cam.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    cam.location?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="space-y-8">
-      <header>
-        <h2 className="text-3xl font-light text-white italic">Synchronized <span className="font-bold not-italic">Traffic Pulse</span></h2>
-        <p className="text-slate-500 text-sm">Autonomous adaptive signal timing and manual system overrides.</p>
+      <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/5 pb-8">
+        <div>
+          <h2 className="text-3xl font-light text-white italic">Synchronized <span className="font-bold not-italic">Traffic Pulse</span></h2>
+          <p className="text-slate-500 text-sm">Autonomous adaptive signal timing and manual system overrides.</p>
+        </div>
+
+        <div className="relative group w-full md:w-80">
+          <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-cyan-400 transition-colors" />
+          <input 
+            type="text"
+            placeholder="Search signals or sectors..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-12 pr-4 py-3.5 glass-dark rounded-2xl text-xs font-bold uppercase tracking-widest focus:outline-none focus:ring-1 focus:ring-cyan-500/50 transition-all border border-white/5 placeholder:text-slate-600"
+          />
+        </div>
       </header>
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-        {cameras.map(camera => {
+        {filteredCameras.map(camera => {
           const signal = signals[camera.id] || { state: 'red', duration: 30, mode: 'auto' };
           return (
             <motion.div
@@ -170,6 +189,17 @@ export default function SignalControl() {
             </motion.div>
           );
         })}
+        {filteredCameras.length === 0 && (
+          <div className="xl:col-span-2 py-20 text-center space-y-4">
+            <div className="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center mx-auto text-slate-700 border border-white/5">
+              <Search size={32} />
+            </div>
+            <div>
+              <p className="text-white font-bold tracking-tight uppercase text-xs">No Signal Nodes Found</p>
+              <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] mt-1">Refine your search parameters or check system connectivity</p>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="glass rounded-3xl p-10 text-white relative overflow-hidden border border-white/10 group">
