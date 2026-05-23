@@ -57,6 +57,26 @@ The core of the system is the **Adaptive Logic Engine**:
 
 ---
 
+## 📅 10-Day Internship Roadmap / نقشه راه ۱۰ روزه دوره کارآموزی
+
+This schedule outlines the development progression over a 10-day working period.
+این جدول زمانی، روند توسعه پروژه را در طول یک دوره ۱۰ روزه کاری مشخص می‌کند.
+
+| Day / روز | Focus / تمرکز | Deliverables / خروجی‌ها |
+| :--- | :--- | :--- |
+| **01** | **System Architecture & Core UI**<br>معماری سیستم و زیربنای اصلی | Project initialization, layout structure, and Glass-Dark theme setup.<br>راه‌اندازی اولیه پروژه، ساختار چیدمان و تنظیم تم شیشه‌ای-تاریک. |
+| **02** | **Auth & Secure Navigation**<br>احراز هویت و ناوبری امن | JWT authentication flow, Login page implementation, and route protection.<br>پیاده‌سازی فرآیند احراز هویت JWT، صفحه ورود و محافظت از مسیرها. |
+| **03** | **Telemetry & Simulation**<br>تله‌متری و شبیه‌سازی | Backend API for camera telemetry and H.264 video stream simulation.<br>ایجاد API سمت سرور برای تله‌متری دوربین‌ها و شبیه‌سازی استریم ویدیو. |
+| **04** | **Neural Monitoring UI**<br>رابط مانیتورینگ عصبی | Object detection overlays, real-time counter displays, and camera switching.<br>نمایش لایه‌های تشخیص اشیا، شمارنده‌های لحظه‌ای و قابلیت تعویض دوربین. |
+| **05** | **Signal Logic Engine**<br>موتور منطقی سیگنال‌ها | Adaptive timing algorithms for intersection weight management.<br>پیاده‌سازی الگوریتم‌های زمان‌بندی انطباقی بر اساس وزن ترافیکی تقاطع‌ها. |
+| **06** | **Mobile UX & Animations**<br>تجربه کاربری موبایل و انیمیشن | Implementing the responsive sidebar and active-phase pulsing animations.<br>پیاده‌سازی سایدبار ریسپانسیو و انیمیشن‌های تپشی برای فازهای فعال. |
+| **07** | **Advanced Analytics**<br>تحلیل و آنالیز پیشرفته | 24-hour cycle trends, density heatmaps, and efficiency metrics.<br>روندهای چرخه‌ای ۲۴ ساعته، نقشه‌های حرارتی تراکم و معیارهای بهره‌وری. |
+| **08** | **Node Admin Panel**<br>پنل مدیریت گره‌ها | CRUD operations for system nodes, search/filter logic for sectors.<br>عملیات مدیریت دوربین‌ها (CRUD) و منطق جستجو/فیلتر برای بخش‌های مختلف. |
+| **09** | **UX Hardening & Interaction**<br>بهبود تجربه و تعامل | Adaptive tooltips, search-as-you-type, and state synchronization.<br>افزودن تولتیپ‌های انطباقی، جستجوی همزمان با تایپ و همگام‌سازی وضعیت. |
+| **10** | **Final Audit & Documentation**<br>مستندسازی و بازبینی نهایی | Final security audit, performance tuning, and README documentation.<br>بازبینی نهایی امنیتی، بهینه‌سازی عملکرد و تکمیل مستندات پروژه. |
+
+---
+
 ## 👨‍💻 Internship Focus
 This project demonstrates proficiency in:
 - Full-stack TypeScript architecture.
