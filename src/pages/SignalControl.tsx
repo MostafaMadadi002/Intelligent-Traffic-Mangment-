@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Power, Timer, Activity, Zap, RefreshCw, Search } from 'lucide-react';
+import { Power, Timer, Activity, Zap, RefreshCw, Search, Download } from 'lucide-react';
 import { motion } from 'motion/react';
 import api from '../lib/api';
 import socket from '../lib/socket';
@@ -31,6 +31,31 @@ export default function SignalControl() {
     api.post('/api/signals/override', { cameraId, state, duration: 30 }).then(res => {
       setSignals((prev: any) => ({ ...prev, [cameraId]: res.data }));
     });
+  };
+
+  const handleExportCSV = (camera: any) => {
+    const timestamp = new Date().toISOString();
+    const signal = signals[camera.id] || { state: 'red', mode: 'auto' };
+    
+    // Generate mock history data
+    const rows = [
+      ['Timestamp', 'Node Name', 'Location', 'State', 'Mode', 'Density'],
+      [timestamp, camera.name, camera.location, signal.state, signal.mode, '74%'],
+      [new Date(Date.now() - 30000).toISOString(), camera.name, camera.location, 'yellow', 'auto', '68%'],
+      [new Date(Date.now() - 90000).toISOString(), camera.name, camera.location, 'green', 'auto', '82%'],
+      [new Date(Date.now() - 150000).toISOString(), camera.name, camera.location, 'red', 'auto', '45%'],
+    ];
+
+    const csvContent = "data:text/csv;charset=utf-8," 
+      + rows.map(e => e.join(",")).join("\n");
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `signal_history_${camera.id}_${Date.now()}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const filteredCameras = cameras.filter(cam => 
@@ -68,15 +93,29 @@ export default function SignalControl() {
               className="glass rounded-3xl p-8 shadow-2xl flex flex-col md:flex-row gap-8 group hover:bg-white/10 transition-colors"
             >
               <div className="flex-1 space-y-8">
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className={`w-2 h-2 rounded-full ${signal.mode === 'auto' ? 'bg-cyan-500 shadow-[0_0_8px_#06b6d4]' : 'bg-amber-500 shadow-[0_0_8px_#f59e0b]'}`} />
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
-                      {signal.mode} Control Mode
-                    </span>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className={`w-2 h-2 rounded-full ${signal.mode === 'auto' ? 'bg-cyan-500 shadow-[0_0_8px_#06b6d4]' : 'bg-amber-500 shadow-[0_0_8px_#f59e0b]'}`} />
+                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
+                        {signal.mode} Control Mode
+                      </span>
+                    </div>
+                    <h3 className="text-2xl font-bold text-white">{camera.name}</h3>
+                    <p className="text-xs font-medium text-slate-500 uppercase tracking-widest">{camera.location}</p>
                   </div>
-                  <h3 className="text-2xl font-bold text-white">{camera.name}</h3>
-                  <p className="text-xs font-medium text-slate-500 uppercase tracking-widest">{camera.location}</p>
+                  
+                  <div className="relative group/tooltip">
+                    <div className="absolute -top-10 right-0 bg-slate-900 border border-white/10 px-3 py-2 rounded-lg text-[10px] whitespace-nowrap pointer-events-none opacity-0 group-hover/tooltip:opacity-100 transition-opacity z-20 shadow-2xl">
+                      Export signal event logs (.csv)
+                    </div>
+                    <button 
+                      onClick={() => handleExportCSV(camera)}
+                      className="p-3 glass-dark hover:bg-white/5 text-slate-500 hover:text-cyan-400 rounded-2xl border border-white/5 transition-all shadow-xl active:scale-90"
+                    >
+                      <Download size={18} />
+                    </button>
+                  </div>
                 </div>
 
                 <div className="flex gap-4">
