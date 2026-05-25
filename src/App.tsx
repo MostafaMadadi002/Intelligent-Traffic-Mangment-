@@ -80,7 +80,7 @@ export default function App() {
         <div className="mesh-bg" />
         <Navigation />
         <NotificationCenter />
-        <main className="flex-1 md:ml-72 pt-20 pb-6 px-6 md:p-10 relative z-10 overflow-hidden">
+        <main className="flex-1 md:ml-72 pt-20 pb-6 px-4 md:px-10 relative z-10 overflow-hidden">
           <AnimatedRoutes />
         </main>
       </div>

@@ -156,14 +156,21 @@ export default function Navigation() {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-              className="fixed left-0 top-0 h-full w-72 glass-dark text-white p-8 flex flex-col z-[80] md:hidden border-r border-cyan-500/10"
+              className="fixed left-0 top-0 h-full w-[85vw] max-w-72 glass-dark text-white p-6 flex flex-col z-[80] border-r border-cyan-500/10"
             >
-              <div className="flex items-center gap-3 mb-12 px-2">
-                <div className="w-10 h-10 bg-cyan-500 rounded-xl flex items-center justify-center font-bold text-2xl shadow-[0_0_30px_rgba(6,182,212,0.5)]">T</div>
-                <h1 className="font-black text-2xl tracking-tighter uppercase italic">Traffic<span className="text-cyan-400 not-italic">Flow</span></h1>
+              <div className="flex items-center justify-between mb-8 px-2">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 bg-cyan-500 rounded-xl flex items-center justify-center font-bold text-xl shadow-[0_0_20px_rgba(6,182,212,0.5)]">T</div>
+                  <h1 className="font-black text-xl tracking-tighter uppercase italic text-white">Traffic<span className="text-cyan-400 not-italic">Flow</span></h1>
+                </div>
+                <button onClick={() => setIsOpen(false)} className="md:hidden p-2 text-slate-500">
+                  <X size={20} />
+                </button>
               </div>
-              <NavLinks />
-              <SystemStatus />
+              <div className="flex-1 overflow-y-auto no-scrollbar">
+                <NavLinks />
+                <SystemStatus />
+              </div>
               <UserSection />
             </motion.nav>
           </>

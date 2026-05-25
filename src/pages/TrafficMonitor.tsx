@@ -41,37 +41,37 @@ export default function TrafficMonitor() {
 
   return (
     <div className="space-y-8">
-      <header className="flex flex-col xl:flex-row xl:items-center justify-between gap-6 py-4 border-b border-white/10">
+      <header className="flex flex-col xl:flex-row xl:items-center justify-between gap-6 py-6 border-b border-white/10">
         <div className="flex flex-col gap-1">
-          <h2 className="text-3xl font-light text-white">Live <span className="font-bold">Neural Monitoring</span></h2>
-          <p className="text-slate-500 text-sm">Real-time object detection and lane segmentation across urban nodes.</p>
+          <h2 className="text-2xl md:text-3xl font-light text-white leading-tight">Live <span className="font-bold">Neural Monitoring</span></h2>
+          <p className="text-slate-500 text-[10px] md:text-sm uppercase tracking-widest font-bold">Real-time object detection nodes.</p>
         </div>
 
-        <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
-          <div className="flex gap-4 p-1 rounded-2xl bg-white/5 border border-white/10">
+        <div className="flex flex-col md:flex-row items-stretch md:items-center gap-4">
+          <div className="flex p-1 rounded-2xl bg-white/5 border border-white/10 overflow-x-auto no-scrollbar">
             <select 
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="bg-transparent text-xs font-bold text-slate-300 px-3 py-2 outline-none cursor-pointer hover:text-white transition-colors uppercase tracking-widest"
+              className="bg-transparent text-[10px] md:text-xs font-bold text-slate-300 px-3 py-2 outline-none cursor-pointer hover:text-white transition-colors uppercase tracking-widest min-w-[100px]"
             >
-              <option value="all" className="bg-slate-900">All Status</option>
-              <option value="active" className="bg-slate-900">Active</option>
-              <option value="inactive" className="bg-slate-300 text-slate-900">Inactive</option>
+              <option value="all" className="bg-slate-900">Status: All</option>
+              <option value="active" className="bg-slate-900">Status: Active</option>
+              <option value="inactive" className="bg-slate-300 text-slate-900">Status: Inactive</option>
             </select>
 
             <select 
               value={locationFilter}
               onChange={(e) => setLocationFilter(e.target.value)}
-              className="bg-transparent text-xs font-bold text-slate-300 px-3 py-2 outline-none cursor-pointer hover:text-white transition-colors uppercase tracking-widest border-l border-white/10"
+              className="bg-transparent text-[10px] md:text-xs font-bold text-slate-300 px-3 py-2 outline-none cursor-pointer hover:text-white transition-colors uppercase tracking-widest border-l border-white/10 min-w-[120px]"
             >
-              <option value="all" className="bg-slate-900">All Locations</option>
+              <option value="all" className="bg-slate-900">Region: All</option>
               {locations.map(loc => (
                 <option key={loc} value={loc} className="bg-slate-900">{loc}</option>
               ))}
             </select>
           </div>
 
-          <div className="flex gap-2 glass-dark p-1.5 rounded-2xl border border-white/5 shadow-2xl overflow-x-auto max-w-full no-scrollbar">
+          <div className="flex gap-2 glass-dark p-1.5 rounded-2xl border border-white/5 shadow-2xl overflow-x-auto no-scrollbar max-w-full">
             {filteredCameras.map(cam => (
               <button
                 key={cam.id}
@@ -92,9 +92,9 @@ export default function TrafficMonitor() {
         </div>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
         <div className="lg:col-span-2 space-y-6">
-          <div className="relative aspect-video bg-slate-950 rounded-3xl overflow-hidden glass shadow-2xl border border-white/10">
+          <div className="relative aspect-video min-h-[220px] md:min-h-0 bg-slate-950 rounded-[1.5rem] md:rounded-3xl overflow-hidden glass shadow-2xl border border-white/10">
             {selectedCamera ? (
               <>
                 <video
@@ -120,11 +120,11 @@ export default function TrafficMonitor() {
                         style={{
                           top: `${20 + i * 15 + (Math.random() * 5)}%`,
                           left: `${15 + i * 20 + (Math.random() * 5)}%`,
-                          width: '100px',
-                          height: '80px',
+                          width: '80px',
+                          height: '60px',
                         }}
                       >
-                        <span className="absolute -top-5 left-0 bg-cyan-400 text-slate-950 text-[8px] px-1 font-black uppercase rounded-t-sm">
+                        <span className="absolute -top-4 left-0 bg-cyan-400 text-slate-950 text-[7px] px-1 font-black uppercase rounded-t-sm">
                           TRUCK 98%
                         </span>
                       </motion.div>
@@ -132,24 +132,24 @@ export default function TrafficMonitor() {
                   </AnimatePresence>
                 </div>
                 
-                <div className="absolute top-6 left-6 flex items-center gap-2 bg-slate-950/80 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
-                  <div className="status-indicator bg-red-500 animate-pulse" />
-                  <span className="text-white text-[10px] font-black tracking-[0.2em] uppercase">Live Signal</span>
+                <div className="absolute top-4 left-4 md:top-6 md:left-6 flex items-center gap-2 bg-slate-950/80 backdrop-blur-md px-3 md:px-4 py-1.5 md:py-2 rounded-full border border-white/10">
+                  <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                  <span className="text-white text-[9px] md:text-[10px] font-black tracking-[0.2em] uppercase whitespace-nowrap">Live Signal</span>
                 </div>
                 
-                <div className="absolute bottom-6 left-6 flex gap-4">
-                  <div className="glass-dark backdrop-blur-md px-5 py-3 rounded-2xl border border-white/10">
-                     <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-1">Intersection ID</p>
-                     <p className="text-xl font-bold text-white">{selectedCamera.id}</p>
+                <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6 flex flex-wrap gap-3 md:gap-4">
+                  <div className="glass-dark backdrop-blur-md px-3 md:px-5 py-2 md:py-3 rounded-[1rem] md:rounded-2xl border border-white/10">
+                     <p className="text-[8px] md:text-[10px] text-slate-500 font-black uppercase tracking-widest mb-0.5 md:mb-1 leading-none">Node</p>
+                     <p className="text-sm md:text-xl font-bold text-white leading-none">{selectedCamera.id.split('-')[0]}</p>
                   </div>
-                  <div className="glass-dark backdrop-blur-md px-5 py-3 rounded-2xl border border-white/10">
-                     <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-1">Density Index</p>
-                     <p className="text-xl font-bold text-cyan-400">{detection?.density || 0}%</p>
+                  <div className="glass-dark backdrop-blur-md px-3 md:px-5 py-2 md:py-3 rounded-[1rem] md:rounded-2xl border border-white/10">
+                     <p className="text-[8px] md:text-[10px] text-slate-500 font-black uppercase tracking-widest mb-0.5 md:mb-1 leading-none">Load</p>
+                     <p className="text-sm md:text-xl font-bold text-cyan-400 leading-none">{detection?.density || 0}%</p>
                   </div>
                 </div>
 
-                <button className="absolute bottom-6 right-6 p-3 glass-dark hover:bg-white/10 rounded-2xl transition-all text-white border border-white/10 group">
-                  <Maximize2 size={20} className="group-hover:scale-110 transition-transform" />
+                <button className="absolute bottom-4 right-4 md:bottom-6 md:right-6 p-2 md:p-3 glass-dark hover:bg-white/10 rounded-xl md:rounded-2xl transition-all text-white border border-white/10 group">
+                  <Maximize2 size={16} md:size={20} className="group-hover:scale-110 transition-transform" />
                 </button>
               </>
             ) : (

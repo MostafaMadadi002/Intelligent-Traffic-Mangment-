@@ -83,26 +83,26 @@ export default function SignalControl() {
         </div>
       </header>
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 md:gap-8">
         {filteredCameras.map(camera => {
           const signal = signals[camera.id] || { state: 'red', duration: 30, mode: 'auto' };
           return (
             <motion.div
               layout
               key={camera.id}
-              className="glass rounded-3xl p-8 shadow-2xl flex flex-col md:flex-row gap-8 group hover:bg-white/10 transition-colors"
+              className="glass rounded-[1.5rem] md:rounded-3xl p-6 md:p-8 shadow-2xl flex flex-col lg:flex-row gap-6 md:gap-8 group hover:bg-white/10 transition-colors border border-white/5"
             >
-              <div className="flex-1 space-y-8">
+              <div className="flex-1 space-y-6 md:space-y-8">
                 <div className="flex items-start justify-between">
                   <div>
                     <div className="flex items-center gap-2 mb-2">
                       <span className={`w-2 h-2 rounded-full ${signal.mode === 'auto' ? 'bg-cyan-500 shadow-[0_0_8px_#06b6d4]' : 'bg-amber-500 shadow-[0_0_8px_#f59e0b]'}`} />
-                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
+                      <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
                         {signal.mode} Control Mode
                       </span>
                     </div>
-                    <h3 className="text-2xl font-bold text-white">{camera.name}</h3>
-                    <p className="text-xs font-medium text-slate-500 uppercase tracking-widest">{camera.location}</p>
+                    <h3 className="text-xl md:text-2xl font-bold text-white">{camera.name}</h3>
+                    <p className="text-[10px] md:text-xs font-medium text-slate-500 uppercase tracking-widest leading-none">{camera.location}</p>
                   </div>
                   
                   <div className="relative group/tooltip">
@@ -111,47 +111,43 @@ export default function SignalControl() {
                     </div>
                     <button 
                       onClick={() => handleExportCSV(camera)}
-                      className="p-3 glass-dark hover:bg-white/5 text-slate-500 hover:text-cyan-400 rounded-2xl border border-white/5 transition-all shadow-xl active:scale-90"
+                      className="p-2.5 md:p-3 glass-dark hover:bg-white/5 text-slate-500 hover:text-cyan-400 rounded-xl md:rounded-2xl border border-white/5 transition-all shadow-xl active:scale-90"
                     >
-                      <Download size={18} />
+                      <Download size={16} md:size={18} />
                     </button>
                   </div>
                 </div>
 
                 <div className="flex gap-4">
-                  <div className="flex-1 glass-dark p-4 rounded-2xl border border-white/5 flex flex-col items-center justify-center gap-1 group/tooltip relative group-hover:bg-white/5 transition-colors">
+                  <div className="flex-1 glass-dark p-3 md:p-4 rounded-xl md:rounded-2xl border border-white/5 flex flex-col items-center justify-center gap-1 group/tooltip relative group-hover:bg-white/5 transition-colors">
                     <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-slate-900 border border-white/10 px-3 py-2 rounded-lg text-[10px] w-32 text-center pointer-events-none opacity-0 group-hover/tooltip:opacity-100 transition-opacity z-20 shadow-2xl">
                       Next phase transition countdown
                     </div>
-                    <Timer size={18} className="text-slate-500" />
-                    <span className="text-2xl font-black text-white font-mono">{signal.duration}s</span>
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Cycle Delta</span>
+                    <Timer size={16} md:size={18} className="text-slate-500" />
+                    <span className="text-xl md:text-2xl font-black text-white font-mono leading-none">{signal.duration}s</span>
+                    <span className="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Cycle Delta</span>
                   </div>
-                  <div className="flex-1 glass-dark p-4 rounded-2xl border border-white/5 flex flex-col items-center justify-center gap-1 group/tooltip relative group-hover:bg-white/5 transition-colors">
+                  <div className="flex-1 glass-dark p-3 md:p-4 rounded-xl md:rounded-2xl border border-white/5 flex flex-col items-center justify-center gap-1 group/tooltip relative group-hover:bg-white/5 transition-colors">
                     <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-slate-900 border border-white/10 px-3 py-2 rounded-lg text-[10px] w-32 text-center pointer-events-none opacity-0 group-hover/tooltip:opacity-100 transition-opacity z-20 shadow-2xl">
                       Real-time lane density (Neural)
                     </div>
-                    <Activity size={18} className="text-slate-500" />
-                    <span className="text-2xl font-black text-cyan-400 font-mono">74%</span>
-                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Current Load</span>
+                    <Activity size={16} md:size={18} className="text-slate-500" />
+                    <span className="text-xl md:text-2xl font-black text-cyan-400 font-mono leading-none">74%</span>
+                    <span className="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Current Load</span>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-2 md:gap-3">
                   {(['red', 'yellow', 'green'] as const).map(color => (
                     <div key={color} className="relative group/tooltip">
                       <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-900 border border-white/10 px-3 py-2 rounded-lg text-[10px] whitespace-nowrap pointer-events-none opacity-0 group-hover/tooltip:opacity-100 transition-opacity z-20 shadow-2xl">
-                        {color === 'red' ? 'Force stop all traffic' : 
-                         color === 'yellow' ? 'Initiate transition phase' : 
-                         'Authorize vehicle flow'}
+                        {color === 'red' ? 'Force stop' : color === 'yellow' ? 'Transition' : 'Authorize'}
                       </div>
                       <button
                         onClick={() => handleManualOverride(camera.id, color)}
-                        className={`w-full py-3.5 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] transition-all relative overflow-hidden ${
+                        className={`w-full py-2.5 md:py-3.5 rounded-xl font-black text-[9px] md:text-[10px] uppercase tracking-[0.15em] transition-all relative overflow-hidden ${
                           signal.state === color 
-                          ? (color === 'red' ? 'bg-red-500 text-white shadow-[0_0_20px_rgba(239,68,68,0.4)]' : 
-                             color === 'yellow' ? 'bg-amber-400 text-slate-950 shadow-[0_0_20px_rgba(251,191,36,0.4)]' : 
-                             'bg-emerald-500 text-white shadow-[0_0_20px_rgba(16,185,129,0.4)]')
+                          ? (color === 'red' ? 'bg-red-500 text-white' : color === 'yellow' ? 'bg-amber-400 text-slate-950' : 'bg-emerald-500 text-white')
                           : 'bg-white/5 text-slate-500 hover:bg-white/10'
                         }`}
                       >
@@ -162,67 +158,46 @@ export default function SignalControl() {
                 </div>
               </div>
 
-              <div className="w-full md:w-32 glass-dark rounded-full p-6 flex flex-col items-center justify-around border border-white/5 relative">
-                <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent opacity-50" />
+              <div className="w-full lg:w-32 glass-dark rounded-[1.5rem] md:rounded-[2.5rem] p-4 md:p-6 flex lg:flex-col items-center justify-around border border-white/5 relative">
+                <div className="absolute inset-0 bg-gradient-to-b md:bg-gradient-to-r lg:bg-gradient-to-b from-white/5 to-transparent opacity-50" />
                 <motion.div 
                   initial={false}
                   animate={{ 
                     backgroundColor: signal.state === 'red' ? '#ef4444' : '#0f172a',
                     boxShadow: signal.state === 'red' 
-                      ? '0 0 40px rgba(239, 68, 68, 0.7), inset 0 0 10px rgba(255,255,255,0.2)' 
+                      ? '0 0 20px md:0 0 40px rgba(239, 68, 68, 0.7), inset 0 0 10px rgba(255,255,255,0.2)' 
                       : 'inset 0 4px 6px rgba(0,0,0,0.4)',
-                    scale: signal.state === 'red' ? [1.05, 1.15, 1.05] : 0.95,
-                    opacity: signal.state === 'red' ? 1 : 0.3
+                    scale: signal.state === 'red' ? [1.02, 1.08, 1.02] : 0.9,
+                    opacity: signal.state === 'red' ? 1 : 0.2
                   }}
-                  transition={{ 
-                    backgroundColor: { duration: 0.8, ease: "easeInOut" },
-                    boxShadow: { duration: 0.8, ease: "easeInOut" },
-                    opacity: { duration: 0.8, ease: "easeInOut" },
-                    scale: signal.state === 'red' 
-                      ? { duration: 2, repeat: Infinity, ease: "easeInOut" } 
-                      : { duration: 0.6, ease: "easeOut" }
-                  }}
-                  className="w-16 h-16 rounded-full relative" 
+                  transition={{ duration: 0.8, ease: "easeInOut" }}
+                  className="w-12 h-12 md:w-16 md:h-16 rounded-full relative" 
                 />
                 <motion.div 
                   initial={false}
                   animate={{ 
                     backgroundColor: signal.state === 'yellow' ? '#fbbf24' : '#0f172a',
                     boxShadow: signal.state === 'yellow' 
-                      ? '0 0 40px rgba(251, 191, 36, 0.7), inset 0 0 10px rgba(255,255,255,0.2)' 
+                      ? '0 0 20px md:0 0 40px rgba(251, 191, 36, 0.7), inset 0 0 10px rgba(255,255,255,0.2)' 
                       : 'inset 0 4px 6px rgba(0,0,0,0.4)',
-                    scale: signal.state === 'yellow' ? [1.05, 1.15, 1.05] : 0.95,
-                    opacity: signal.state === 'yellow' ? 1 : 0.3
+                    scale: signal.state === 'yellow' ? [1.02, 1.08, 1.02] : 0.9,
+                    opacity: signal.state === 'yellow' ? 1 : 0.2
                   }}
-                  transition={{ 
-                    backgroundColor: { duration: 0.8, ease: "easeInOut" },
-                    boxShadow: { duration: 0.8, ease: "easeInOut" },
-                    opacity: { duration: 0.8, ease: "easeInOut" },
-                    scale: signal.state === 'yellow' 
-                      ? { duration: 2, repeat: Infinity, ease: "easeInOut" } 
-                      : { duration: 0.6, ease: "easeOut" }
-                  }}
-                  className="w-16 h-16 rounded-full relative" 
+                  transition={{ duration: 0.8, ease: "easeInOut" }}
+                  className="w-12 h-12 md:w-16 md:h-16 rounded-full relative" 
                 />
                 <motion.div 
                   initial={false}
                   animate={{ 
                     backgroundColor: signal.state === 'green' ? '#10b981' : '#0f172a',
                     boxShadow: signal.state === 'green' 
-                      ? '0 0 40px rgba(16, 185, 129, 0.7), inset 0 0 10px rgba(255,255,255,0.2)' 
+                      ? '0 0 20px md:0 0 40px rgba(16, 185, 129, 0.7), inset 0 0 10px rgba(255,255,255,0.2)' 
                       : 'inset 0 4px 6px rgba(0,0,0,0.4)',
-                    scale: signal.state === 'green' ? [1.05, 1.15, 1.05] : 0.95,
-                    opacity: signal.state === 'green' ? 1 : 0.3
+                    scale: signal.state === 'green' ? [1.02, 1.08, 1.02] : 0.9,
+                    opacity: signal.state === 'green' ? 1 : 0.2
                   }}
-                  transition={{ 
-                    backgroundColor: { duration: 0.8, ease: "easeInOut" },
-                    boxShadow: { duration: 0.8, ease: "easeInOut" },
-                    opacity: { duration: 0.8, ease: "easeInOut" },
-                    scale: signal.state === 'green' 
-                      ? { duration: 2, repeat: Infinity, ease: "easeInOut" } 
-                      : { duration: 0.6, ease: "easeOut" }
-                  }}
-                  className="w-16 h-16 rounded-full relative" 
+                  transition={{ duration: 0.8, ease: "easeInOut" }}
+                  className="w-12 h-12 md:w-16 md:h-16 rounded-full relative" 
                 />
               </div>
             </motion.div>

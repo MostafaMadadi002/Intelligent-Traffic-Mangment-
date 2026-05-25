@@ -87,25 +87,25 @@ export default function Home() {
   };
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto">
+    <div className="space-y-6 md:space-y-8 max-w-7xl mx-auto">
       <AnimatePresence>
         {isRecalibrating && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] bg-[#020617]/90 backdrop-blur-md flex flex-col items-center justify-center pointer-events-auto"
+            className="fixed inset-0 z-[200] bg-[#020617]/90 backdrop-blur-md flex flex-col items-center justify-center pointer-events-auto p-6"
           >
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-              className="w-24 h-24 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full mb-8"
+              className="w-16 h-16 md:w-24 md:h-24 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full mb-8"
             />
             <div className="text-center space-y-2">
-              <h3 className="text-2xl font-black text-white uppercase tracking-widest">Neural Recalibration</h3>
-              <p className="text-slate-500 font-mono text-sm animate-pulse">SYNCHRONIZING INTERSECTION MATRICES...</p>
+              <h3 className="text-xl md:text-2xl font-black text-white uppercase tracking-widest">Neural Recalibration</h3>
+              <p className="text-slate-500 font-mono text-[10px] md:text-sm animate-pulse">SYNCHRONIZING INTERSECTION MATRICES...</p>
             </div>
-            <div className="mt-12 w-64 h-1 bg-white/5 rounded-full overflow-hidden border border-white/10">
+            <div className="mt-12 w-full max-w-xs h-1 bg-white/5 rounded-full overflow-hidden border border-white/10">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: "100%" }}
@@ -117,29 +117,29 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      <header className="flex flex-col md:flex-row md:items-center justify-between mb-8 pb-6 border-b border-white/5 relative">
+      <header className="flex flex-col md:flex-row md:items-center justify-between mb-4 md:mb-8 pb-6 border-b border-white/5 relative gap-6">
         <div className="absolute -bottom-[1px] left-0 w-32 h-[2px] bg-cyan-500 shadow-[0_0_10px_#06b6d4]" />
         <div>
-          <h2 className="text-4xl font-light text-white tracking-tight italic">Urban <span className="font-black not-italic text-cyan-400">Control Matrix</span></h2>
-          <p className="text-slate-500 text-sm mt-1 uppercase tracking-widest font-bold font-mono">Operations Command Center [Sector 04]</p>
+          <h2 className="text-3xl md:text-4xl font-light text-white tracking-tight italic leading-tight">Urban <span className="font-black not-italic text-cyan-400">Control Matrix</span></h2>
+          <p className="text-slate-500 text-[10px] md:text-sm mt-1 uppercase tracking-widest font-bold font-mono">Operations Command Center [Sector 04]</p>
         </div>
-        <div className="flex items-center gap-6 mt-6 md:mt-0">
-          <div className="flex flex-col items-end">
+        <div className="flex flex-wrap items-center gap-4 md:gap-6">
+          <div className="flex flex-col items-start md:items-end">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Global AI Engine</span>
+              <span className="text-[9px] md:text-[10px] font-black text-slate-500 uppercase tracking-widest">Global AI Engine</span>
               <div className="w-2 h-2 rounded-full bg-cyan-500 shadow-[0_0_10px_#06b6d4] animate-pulse" />
             </div>
-            <span className="text-xs font-mono text-white mt-0.5">LATENCY: 14.4ms</span>
+            <span className="text-[10px] md:text-xs font-mono text-white mt-0.5 whitespace-nowrap">LATENCY: 14.4ms</span>
           </div>
-          <div className="h-10 w-[1px] bg-white/10 hidden md:block" />
-          <div className="glass-dark border border-white/10 px-6 py-3 rounded-2xl flex flex-col items-center justify-center">
-            <span className="text-[8px] font-black text-slate-500 uppercase tracking-widest">System UTC</span>
-            <span className="text-xs font-bold font-mono text-white">{new Date().toLocaleTimeString([], { hour12: false })}</span>
+          <div className="h-8 w-[1px] bg-white/10 hidden md:block" />
+          <div className="glass-dark border border-white/10 px-4 md:px-6 py-2 md:py-3 rounded-2xl flex flex-col items-center justify-center">
+            <span className="text-[7px] md:text-[8px] font-black text-slate-500 uppercase tracking-widest">System UTC</span>
+            <span className="text-[10px] md:text-xs font-bold font-mono text-white">{new Date().toLocaleTimeString([], { hour12: false })}</span>
           </div>
         </div>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {[
           { label: 'Total Vehicles', value: stats.totalVehicles, icon: Car, color: 'cyan' },
           { label: 'Avg Density', value: `${stats.avgDensity.toFixed(1)}%`, icon: Activity, color: 'emerald' },
@@ -166,9 +166,9 @@ export default function Home() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
         <div className="lg:col-span-2 space-y-6">
-          <div className="glass rounded-3xl p-8 relative overflow-hidden group">
+          <div className="glass rounded-[1.5rem] md:rounded-3xl p-6 md:p-8 relative overflow-hidden group">
             {/* HeatMap Overlay */}
             <div className="absolute inset-0 opacity-20 pointer-events-none">
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.1)_0%,transparent_70%)]" />
@@ -192,27 +192,27 @@ export default function Home() {
                     delay: Math.random() * 2
                   }}
                   style={{ left: point.x, top: point.y }}
-                  className={`absolute w-12 h-12 rounded-full blur-xl ${getHeatColor(point.density)}`}
+                  className={`absolute w-8 h-8 md:w-12 md:h-12 rounded-full blur-xl md:blur-2xl ${getHeatColor(point.density)}`}
                 />
               ))}
             </div>
 
-            <div className="flex items-center justify-between mb-8 relative z-10">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:mb-8 relative z-10 mb-6">
               <div className="flex items-center gap-3">
-                <MapIcon className="text-cyan-400" size={24} />
-                <h3 className="text-xl font-bold">Intersection Overview</h3>
+                <MapIcon className="text-cyan-400" size={20} md:size={24} />
+                <h3 className="text-lg md:text-xl font-bold">Intersection Overview</h3>
               </div>
               <div className="flex items-center gap-4">
                  <div className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
-                    <span className="text-[10px] uppercase font-bold text-slate-500">Congested</span>
+                    <span className="text-[9px] md:text-[10px] uppercase font-bold text-slate-500">Congested</span>
                  </div>
                  <div className="h-4 w-[1px] bg-white/10" />
-                 <button className="text-xs font-bold uppercase tracking-wider text-cyan-400 hover:text-cyan-300 transition-colors">Digital Twin Map</button>
+                 <button className="text-[10px] md:text-xs font-black uppercase tracking-widest text-cyan-400 hover:text-cyan-300 transition-colors">Digital Twin</button>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 relative z-10">
               {cameras.map((camera) => (
                 <div key={camera.id} className="flex items-center justify-between p-5 rounded-2xl bg-white/[0.03] backdrop-blur-md hover:bg-white/10 transition-all duration-300 group border border-white/5 shadow-xl">
                   <div className="flex items-center gap-4">
