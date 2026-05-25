@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import Navigation from './components/Navigation';
+import NotificationCenter from './components/NotificationCenter';
 import Home from './pages/Home';
 import TrafficMonitor from './pages/TrafficMonitor';
 import SignalControl from './pages/SignalControl';
@@ -50,6 +51,7 @@ export default function App() {
       <div className="flex min-h-screen bg-[#020617] text-slate-200 font-sans selection:bg-cyan-500/30">
         <div className="mesh-bg" />
         <Navigation />
+        <NotificationCenter />
         <main className="flex-1 md:ml-64 pt-20 pb-6 px-6 md:p-10 relative z-10 overflow-hidden">
           <AnimatedRoutes />
         </main>

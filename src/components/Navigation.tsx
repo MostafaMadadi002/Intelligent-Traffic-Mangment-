@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Activity, LayoutDashboard, Monitor, Settings, MapPin, LogOut, Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import SystemStatus from './SystemStatus';
 
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -123,6 +124,7 @@ export default function Navigation() {
                 <h1 className="font-bold text-xl tracking-tight uppercase">TrafficFlow</h1>
               </div>
               <NavLinks />
+              <SystemStatus />
               <UserSection />
             </motion.nav>
           </>
@@ -136,6 +138,7 @@ export default function Navigation() {
           <h1 className="font-bold text-xl tracking-tight uppercase">TrafficFlow</h1>
         </div>
         <NavLinks />
+        <SystemStatus />
         <UserSection />
       </nav>
     </>

@@ -25,6 +25,20 @@
 
   .mesh-bg {
     @apply fixed inset-0 -z-10 bg-[radial-gradient(circle_at_0%_0%,#0f172a_0%,transparent_50%),radial-gradient(circle_at_100%_100%,#1e1b4b_0%,transparent_50%),radial-gradient(circle_at_50%_50%,#020617_0%,#020617_100%)];
+    animation: backgroundPulse 15s ease-infinite;
+  }
+
+  @keyframes backgroundPulse {
+    0%, 100% { opacity: 0.8; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 
   .status-indicator {
