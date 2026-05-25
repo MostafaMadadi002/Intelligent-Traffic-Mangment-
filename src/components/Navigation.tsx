@@ -58,32 +58,41 @@ export default function Navigation() {
     </div>
   );
 
-  const UserSection = () => (
-    <div className="pt-6 border-t border-white/5 space-y-4">
-      {isAuthenticated ? (
-        <div className="flex items-center gap-3 px-2">
-          <div className="w-10 h-10 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center font-bold text-indigo-400">AD</div>
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-semibold text-white truncate">System Admin</p>
-            <button 
-              onClick={handleLogout}
-              className="text-[10px] text-red-400 hover:text-red-300 transition-colors uppercase font-bold tracking-wider"
-            >
-              Logout
-            </button>
+  const UserSection = () => {
+    const userStr = localStorage.getItem('traffic_user');
+    const user = userStr ? JSON.parse(userStr) : null;
+    const displayName = user?.name || 'System Admin';
+    const initials = displayName.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2);
+
+    return (
+      <div className="pt-6 border-t border-white/5 space-y-4">
+        {isAuthenticated ? (
+          <div className="flex items-center gap-3 px-2">
+            <div className="w-10 h-10 rounded-full bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center font-bold text-indigo-400 text-xs">
+              {initials}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-semibold text-white truncate">{displayName}</p>
+              <button 
+                onClick={handleLogout}
+                className="text-[10px] text-red-500 hover:text-red-400 transition-colors uppercase font-black tracking-widest mt-1"
+              >
+                Terminate Session
+              </button>
+            </div>
           </div>
-        </div>
-      ) : (
-        <Link
-          to="/login"
-          className="flex items-center gap-3 px-4 py-3 rounded-xl w-full text-slate-400 hover:bg-white/5 hover:text-white transition-colors"
-        >
-          <Settings size={20} />
-          <span className="font-medium">Admin Login</span>
-        </Link>
-      )}
-    </div>
-  );
+        ) : (
+          <Link
+            to="/login"
+            className="flex items-center gap-3 px-4 py-3 rounded-xl w-full text-slate-400 hover:bg-white/5 hover:text-white transition-colors"
+          >
+            <Settings size={20} />
+            <span className="font-medium">Admin Access</span>
+          </Link>
+        )}
+      </div>
+    );
+  };
 
   return (
     <>

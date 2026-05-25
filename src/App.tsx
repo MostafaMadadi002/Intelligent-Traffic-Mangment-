@@ -26,11 +26,39 @@ const AnimatedRoutes = () => {
         transition={{ duration: 0.3, ease: 'easeOut' }}
       >
         <Routes location={location}>
-          <Route path="/" element={<Home />} />
-          <Route path="/monitor" element={<TrafficMonitor />} />
-          <Route path="/signals" element={<SignalControl />} />
-          <Route path="/analytics" element={<Analytics />} />
           <Route path="/login" element={<Login />} />
+          <Route 
+            path="/" 
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/monitor" 
+            element={
+              <ProtectedRoute>
+                <TrafficMonitor />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/signals" 
+            element={
+              <ProtectedRoute>
+                <SignalControl />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/analytics" 
+            element={
+              <ProtectedRoute>
+                <Analytics />
+              </ProtectedRoute>
+            } 
+          />
           <Route 
             path="/admin" 
             element={
