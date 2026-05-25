@@ -240,14 +240,23 @@ export default function Home() {
                          <div className={`absolute inset-0 opacity-20 ${getHeatColor(cameraStats[camera.id]?.density || 0)}`} />
                         <Signal size={20} className={camera.status === 'active' ? 'text-emerald-400 relative z-10' : 'text-slate-600 relative z-10'} />
                       </div>
-                      <div className="min-w-0">
+                      <div className="min-w-0 flex-1">
                         <p className="font-bold text-white text-sm truncate">{camera.name}</p>
-                        <div className="flex items-center gap-2 flex-wrap">
+                        <div className="flex items-center gap-2 flex-wrap mb-2">
                           <p className="text-[9px] md:text-[10px] uppercase font-bold tracking-widest text-slate-500 truncate max-w-[80px] sm:max-w-none">{camera.location}</p>
                           <span className="w-1 h-1 rounded-full bg-slate-700 hidden sm:block" />
                           <p className={`text-[9px] md:text-[10px] font-black uppercase whitespace-nowrap ${cameraStats[camera.id]?.density > 70 ? 'text-red-400' : 'text-emerald-400'}`}>
                             {cameraStats[camera.id]?.density || 0}% Load
                           </p>
+                        </div>
+                        {/* Density Progress Bar */}
+                        <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                          <motion.div
+                            initial={{ width: 0 }}
+                            animate={{ width: `${cameraStats[camera.id]?.density || 0}%` }}
+                            className={`h-full ${getHeatColor(cameraStats[camera.id]?.density || 0)} shadow-[0_0_8px_currentColor]`}
+                            transition={{ type: "spring", stiffness: 40, damping: 12 }}
+                          />
                         </div>
                       </div>
                     </div>
