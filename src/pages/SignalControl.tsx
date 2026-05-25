@@ -158,7 +158,7 @@ export default function SignalControl() {
                 </div>
               </div>
 
-              <div className="w-full lg:w-32 glass-dark rounded-[1.5rem] md:rounded-[2.5rem] p-4 md:p-6 flex lg:flex-col items-center justify-around border border-white/5 relative">
+              <div className="w-full lg:w-32 glass-dark rounded-[1.5rem] md:rounded-[2.5rem] p-4 md:p-6 flex lg:flex-col items-center justify-between border border-white/5 relative">
                 <div className="absolute inset-0 bg-gradient-to-b md:bg-gradient-to-r lg:bg-gradient-to-b from-white/5 to-transparent opacity-50" />
                 <motion.div 
                   initial={false}
@@ -168,10 +168,10 @@ export default function SignalControl() {
                       ? '0 0 20px md:0 0 40px rgba(239, 68, 68, 0.7), inset 0 0 10px rgba(255,255,255,0.2)' 
                       : 'inset 0 4px 6px rgba(0,0,0,0.4)',
                     scale: signal.state === 'red' ? [1.02, 1.08, 1.02] : 0.9,
-                    opacity: signal.state === 'red' ? 1 : 0.2
+                    opacity: signal.state === 'red' ? 1 : 0.15
                   }}
                   transition={{ duration: 0.8, ease: "easeInOut" }}
-                  className="w-12 h-12 md:w-16 md:h-16 rounded-full relative" 
+                  className="w-10 h-10 md:w-16 md:h-16 rounded-full relative" 
                 />
                 <motion.div 
                   initial={false}
@@ -181,10 +181,10 @@ export default function SignalControl() {
                       ? '0 0 20px md:0 0 40px rgba(251, 191, 36, 0.7), inset 0 0 10px rgba(255,255,255,0.2)' 
                       : 'inset 0 4px 6px rgba(0,0,0,0.4)',
                     scale: signal.state === 'yellow' ? [1.02, 1.08, 1.02] : 0.9,
-                    opacity: signal.state === 'yellow' ? 1 : 0.2
+                    opacity: signal.state === 'yellow' ? 1 : 0.15
                   }}
                   transition={{ duration: 0.8, ease: "easeInOut" }}
-                  className="w-12 h-12 md:w-16 md:h-16 rounded-full relative" 
+                  className="w-10 h-10 md:w-16 md:h-16 rounded-full relative" 
                 />
                 <motion.div 
                   initial={false}
@@ -194,10 +194,10 @@ export default function SignalControl() {
                       ? '0 0 20px md:0 0 40px rgba(16, 185, 129, 0.7), inset 0 0 10px rgba(255,255,255,0.2)' 
                       : 'inset 0 4px 6px rgba(0,0,0,0.4)',
                     scale: signal.state === 'green' ? [1.02, 1.08, 1.02] : 0.9,
-                    opacity: signal.state === 'green' ? 1 : 0.2
+                    opacity: signal.state === 'green' ? 1 : 0.15
                   }}
                   transition={{ duration: 0.8, ease: "easeInOut" }}
-                  className="w-12 h-12 md:w-16 md:h-16 rounded-full relative" 
+                  className="w-10 h-10 md:w-16 md:h-16 rounded-full relative" 
                 />
               </div>
             </motion.div>

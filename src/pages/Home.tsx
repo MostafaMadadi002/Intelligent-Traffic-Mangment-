@@ -197,43 +197,50 @@ export default function Home() {
               ))}
             </div>
 
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 md:mb-8 relative z-10 mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 md:mb-8 relative z-10 mb-6 px-1">
               <div className="flex items-center gap-3">
-                <MapIcon className="text-cyan-400" size={20} md:size={24} />
-                <h3 className="text-lg md:text-xl font-bold">Intersection Overview</h3>
+                <MapIcon className="text-cyan-400 shrink-0" size={20} />
+                <h3 className="text-lg md:text-xl font-bold truncate">Intersection Overview</h3>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto">
                  <div className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
-                    <span className="text-[9px] md:text-[10px] uppercase font-bold text-slate-500">Congested</span>
+                    <span className="text-[9px] md:text-[10px] uppercase font-bold text-slate-500 whitespace-nowrap">Congested</span>
                  </div>
                  <div className="h-4 w-[1px] bg-white/10" />
-                 <button className="text-[10px] md:text-xs font-black uppercase tracking-widest text-cyan-400 hover:text-cyan-300 transition-colors">Digital Twin</button>
+                 <button className="text-[10px] md:text-xs font-black uppercase tracking-widest text-cyan-400 hover:text-cyan-300 transition-colors whitespace-nowrap">Digital Twin</button>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 relative z-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
               {cameras.map((camera) => (
-                <div key={camera.id} className="flex items-center justify-between p-5 rounded-2xl bg-white/[0.03] backdrop-blur-md hover:bg-white/10 transition-all duration-300 group border border-white/5 shadow-xl">
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 glass-dark rounded-xl flex items-center justify-center relative overflow-hidden">
+                <div key={camera.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 md:p-5 rounded-2xl bg-white/[0.03] backdrop-blur-md hover:bg-white/10 transition-all duration-300 group border border-white/5 shadow-xl gap-4">
+                  <div className="flex items-center gap-4 flex-1 min-w-0">
+                    <div className="w-10 h-10 shrink-0 glass-dark rounded-xl flex items-center justify-center relative overflow-hidden">
                        <div className={`absolute inset-0 opacity-20 ${getHeatColor(cameraStats[camera.id]?.density || 0)}`} />
                       <Signal size={20} className={camera.status === 'active' ? 'text-emerald-400 relative z-10' : 'text-slate-600 relative z-10'} />
                     </div>
-                    <div>
-                      <p className="font-semibold text-white text-sm">{camera.name}</p>
-                      <div className="flex items-center gap-2">
-                        <p className="text-[8px] uppercase font-bold tracking-widest text-slate-500">{camera.location}</p>
-                        <span className="w-1 h-1 rounded-full bg-slate-700" />
-                        <p className={`text-[8px] font-black uppercase ${cameraStats[camera.id]?.density > 70 ? 'text-red-400' : 'text-emerald-400'}`}>
+                    <div className="min-w-0">
+                      <p className="font-bold text-white text-sm truncate">{camera.name}</p>
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="text-[9px] md:text-[10px] uppercase font-bold tracking-widest text-slate-500 truncate max-w-[80px] sm:max-w-none">{camera.location}</p>
+                        <span className="w-1 h-1 rounded-full bg-slate-700 hidden sm:block" />
+                        <p className={`text-[9px] md:text-[10px] font-black uppercase whitespace-nowrap ${cameraStats[camera.id]?.density > 70 ? 'text-red-400' : 'text-emerald-400'}`}>
                           {cameraStats[camera.id]?.density || 0}% Load
                         </p>
                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-col items-end">
-                    <p className="text-xs font-mono font-bold text-white">{cameraStats[camera.id]?.flow || 0}</p>
-                    <p className="text-[7px] uppercase font-bold text-slate-500 tracking-tighter">Veh/Min</p>
+                  <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between sm:justify-center pt-3 sm:pt-0 border-t sm:border-t-0 border-white/5">
+                    <div className="flex flex-col items-start sm:items-end">
+                      <p className="text-sm md:text-base font-mono font-bold text-white leading-none">{cameraStats[camera.id]?.flow || 0}</p>
+                      <p className="text-[8px] uppercase font-bold text-slate-500 tracking-tighter mt-1">Vehicles/Min</p>
+                    </div>
+                    <div className="sm:hidden">
+                       <div className={`px-2 py-0.5 rounded text-[8px] font-black uppercase ${(cameraStats[camera.id]?.density || 0) > 70 ? 'bg-red-500/10 text-red-500' : 'bg-emerald-500/10 text-emerald-500'}`}>
+                         { (cameraStats[camera.id]?.density || 0) > 70 ? 'Congested' : 'Clear' }
+                       </div>
+                    </div>
                   </div>
                 </div>
               ))}
