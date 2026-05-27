@@ -11,9 +11,40 @@ dotenv.config();
 
 // --- In-Memory Data Storage ---
 const db = {
+  simulation: {
+    pattern: 'normal' as 'normal' | 'rush_hour' | 'night' | 'accident',
+    intensity: 1.0,
+    isActive: true
+  },
   cameras: [
-    { id: 'cam-1', name: 'Main St & 5th Ave', location: 'Downtown', videoUrl: 'https://test-videos.co.uk/vids/jellyfish/mp4/h264/360/Jellyfish_360_10s.mp4', status: 'active', createdAt: new Date() },
-    { id: 'cam-2', name: 'West Blvd & Oak', location: 'Suburb', videoUrl: 'https://test-videos.co.uk/vids/jellyfish/mp4/h264/360/Jellyfish_360_10s.mp4', status: 'active', createdAt: new Date() },
+    { 
+      id: 'cam-1', 
+      name: 'Main St & 5th Ave', 
+      location: 'Downtown', 
+      videoUrl: 'https://test-videos.co.uk/vids/jellyfish/mp4/h264/360/Jellyfish_360_10s.mp4', 
+      status: 'active', 
+      createdAt: new Date(),
+      streamMetadata: {
+        bitrate: '4.5 Mbps',
+        codec: 'H.264',
+        resolution: '1920x1080',
+        fps: 30
+      }
+    },
+    { 
+      id: 'cam-2', 
+      name: 'West Blvd & Oak', 
+      location: 'Suburb', 
+      videoUrl: 'https://test-videos.co.uk/vids/jellyfish/mp4/h264/360/Jellyfish_360_10s.mp4', 
+      status: 'active', 
+      createdAt: new Date(),
+      streamMetadata: {
+        bitrate: '2.8 Mbps',
+        codec: 'H.264',
+        resolution: '1280x720',
+        fps: 24
+      }
+    },
   ],
   users: [
     { id: 'admin_seed', email: 'mostafamadadi.1382@gmail.com', role: 'admin', createdAt: new Date() }
@@ -63,6 +94,35 @@ const authenticateToken = (req: any, res: any, next: any) => {
 };
 
 // --- API Routes ---
+
+// Simulation Control
+app.get('/api/simulation/status', (req, res) => {
+  res.json(db.simulation);
+});
+
+app.post('/api/simulation/control', authenticateToken, (req, res) => {
+  const { pattern, intensity, isActive } = req.body;
+  
+  if (pattern) db.simulation.pattern = pattern;
+  if (intensity !== undefined) db.simulation.intensity = intensity;
+  if (isActive !== undefined) db.simulation.isActive = isActive;
+  
+  io.emit('simulationUpdate', db.simulation);
+  res.json({ message: 'Simulation parameters updated', current: db.simulation });
+});
+
+// Camera Stream Info
+app.get('/api/cameras/:id/stream', (req, res) => {
+  const camera = db.cameras.find(c => c.id === req.params.id);
+  if (!camera) return res.status(404).json({ error: 'Camera not found' });
+  
+  res.json({
+    streamUrl: camera.videoUrl,
+    metadata: camera.streamMetadata,
+    protocol: 'HLS/WebRTC',
+    timestamp: new Date().toISOString()
+  });
+});
 
 // Auth
 app.post('/api/auth/login', async (req, res) => {
@@ -187,20 +247,30 @@ app.use((err: any, req: any, res: any, next: any) => {
 // --- Real-time Simulation Engine ---
 setInterval(async () => {
   try {
-    if (db.cameras.length === 0) return;
+    if (db.cameras.length === 0 || !db.simulation.isActive) return;
     
     const camera = db.cameras[Math.floor(Math.random() * db.cameras.length)];
     const cameraId = camera.id;
+    
+    // Pattern based density calculation
+    let baseDensity = 30;
+    if (db.simulation.pattern === 'rush_hour') baseDensity = 75;
+    if (db.simulation.pattern === 'night') baseDensity = 5;
+    if (db.simulation.pattern === 'accident') baseDensity = 90;
+    
+    const densityNoise = (Math.random() * 20) - 10;
+    const finalDensity = Math.max(0, Math.min(100, (baseDensity + densityNoise) * db.simulation.intensity));
+
     const detectionData = {
       cameraId,
       timestamp: new Date(),
       vehicleCounts: {
-        car: Math.floor(Math.random() * 20),
-        motorcycle: Math.floor(Math.random() * 10),
-        truck: Math.floor(Math.random() * 5),
-        bus: Math.floor(Math.random() * 3),
+        car: Math.floor((finalDensity / 5) * (Math.random() * 1.5)),
+        motorcycle: Math.floor((finalDensity / 10) * (Math.random() * 1.5)),
+        truck: Math.floor((finalDensity / 20) * (Math.random() * 1.5)),
+        bus: Math.floor((finalDensity / 30) * (Math.random() * 1.5)),
       },
-      density: Math.floor(Math.random() * 100),
+      density: Math.floor(finalDensity),
     };
 
     // Save In-Memory

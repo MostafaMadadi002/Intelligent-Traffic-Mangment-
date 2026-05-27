@@ -1,8 +1,9 @@
 import { useEffect, useState, useRef } from 'react';
-import { Camera, Car, Truck, Bike, Bus, Activity, Maximize2 } from 'lucide-react';
+import { Camera, Car, Truck, Bike, Bus, Activity, Maximize2, Server, Globe, Cpu } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import socket from '../lib/socket';
 import api from '../lib/api';
+import SimulationControl from '../components/SimulationControl';
 
 export default function TrafficMonitor() {
   const [cameras, setCameras] = useState<any[]>([]);
@@ -10,6 +11,7 @@ export default function TrafficMonitor() {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [locationFilter, setLocationFilter] = useState<string>('all');
   const [detection, setDetection] = useState<any>(null);
+  const [streamInfo, setStreamInfo] = useState<any>(null);
   const [history, setHistory] = useState<any[]>([]);
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -31,6 +33,14 @@ export default function TrafficMonitor() {
     };
   }, [selectedCamera]);
 
+  useEffect(() => {
+    if (selectedCamera) {
+      api.get(`/cameras/${selectedCamera.id}/stream`).then(res => {
+        setStreamInfo(res.data);
+      });
+    }
+  }, [selectedCamera]);
+
   const filteredCameras = cameras.filter(cam => {
     const matchStatus = statusFilter === 'all' || cam.status === statusFilter;
     const matchLocation = locationFilter === 'all' || cam.location === locationFilter;
@@ -47,7 +57,14 @@ export default function TrafficMonitor() {
           <p className="text-slate-500 text-[10px] md:text-sm uppercase tracking-widest font-bold">Real-time object detection nodes.</p>
         </div>
 
+        <div className="hidden 2xl:block">
+          <SimulationControl />
+        </div>
+
         <div className="flex flex-col md:flex-row items-stretch md:items-center gap-4">
+          <div className="2xl:hidden mb-2">
+             <SimulationControl />
+          </div>
           <div className="flex p-1 rounded-2xl bg-white/5 border border-white/10 overflow-x-auto no-scrollbar">
             <select 
               value={statusFilter}
@@ -181,9 +198,28 @@ export default function TrafficMonitor() {
         <div className="space-y-6">
           <div className="glass rounded-3xl p-8 border border-white/5">
             <h3 className="text-sm font-black text-slate-400 uppercase tracking-[0.2em] mb-8 font-mono flex items-center gap-2">
-              <Activity size={16} className="text-cyan-400" />
-              Stream Metrics
+              <Server size={16} className="text-cyan-400" />
+              Stream Analytics
             </h3>
+            <div className="grid grid-cols-2 gap-4 mb-8">
+               <div className="bg-white/5 p-3 rounded-xl border border-white/5">
+                  <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1">Codec</p>
+                  <p className="text-xs font-bold text-white font-mono">{streamInfo?.metadata?.codec || 'H.264'}</p>
+               </div>
+               <div className="bg-white/5 p-3 rounded-xl border border-white/5">
+                  <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1">FPS</p>
+                  <p className="text-xs font-bold text-white font-mono">{streamInfo?.metadata?.fps || 30}</p>
+               </div>
+               <div className="bg-white/5 p-3 rounded-xl border border-white/5">
+                  <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1">Bitrate</p>
+                  <p className="text-xs font-bold text-cyan-400 font-mono">{streamInfo?.metadata?.bitrate || '0.0 Mbps'}</p>
+               </div>
+               <div className="bg-white/5 p-3 rounded-xl border border-white/5">
+                  <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1">Res</p>
+                  <p className="text-xs font-bold text-white font-mono">{streamInfo?.metadata?.resolution || '1080p'}</p>
+               </div>
+            </div>
+            
             <div className="space-y-8">
               {[
                 { name: 'Core Density', value: detection?.density || 10, color: 'cyan' },
