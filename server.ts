@@ -204,6 +204,24 @@ app.get('/api/analytics', async (req, res) => {
   res.json(data);
 });
 
+app.get('/api/analytics/predictions', async (req, res) => {
+  const currentHour = new Date().getHours();
+  const predictions = Array.from({ length: 24 }, (_, i) => {
+    const hour = (currentHour + i + 1) % 24;
+    // Simple logic: base load + rush hour peaks shifted for "next 24h"
+    const base = 250 + Math.floor(Math.random() * 100);
+    const rushHour1 = (hour > 7 && hour < 10) ? 500 : 0;
+    const rushHour2 = (hour > 16 && hour < 19) ? 450 : 0;
+    const nightMode = (hour > 23 || hour < 5) ? -150 : 0;
+    
+    return {
+      hour,
+      predictedCount: Math.max(50, base + rushHour1 + rushHour2 + nightMode + (Math.random() * 50))
+    };
+  });
+  res.json(predictions);
+});
+
 // AI Ingestion Endpoint (For Python service/Edge devices)
 app.post('/api/detection/push', async (req, res) => {
   const { cameraId, vehicleCounts, density } = req.body;

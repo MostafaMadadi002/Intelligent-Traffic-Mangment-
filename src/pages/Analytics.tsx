@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { 
   LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell
 } from 'recharts';
-import { Download, Calendar, TrendingUp, Clock, AlertCircle } from 'lucide-react';
+import { Download, Calendar, TrendingUp, Clock, AlertCircle, BrainCircuit } from 'lucide-react';
 import api from '../lib/api';
+import PredictiveTrendChart from '../components/PredictiveTrendChart';
 
 export default function Analytics() {
   const [data, setData] = useState<any[]>([]);
@@ -139,21 +140,28 @@ export default function Analytics() {
           </div>
         </div>
 
-        <div className="glass-dark rounded-3xl p-10 text-white relative flex flex-col justify-between border border-white/5 overflow-hidden group">
-           <div className="absolute bottom-0 right-0 w-64 h-64 bg-cyan-500/5 blur-3xl -mb-32 -mr-32 group-hover:bg-cyan-500/10 transition-all" />
+        <div className="glass-dark rounded-3xl p-8 text-white relative flex flex-col justify-between border border-white/5 overflow-hidden group">
+           <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/5 blur-3xl -mt-32 -mr-32 group-hover:bg-indigo-500/10 transition-all" />
            <div className="space-y-6 relative z-10">
-              <h3 className="text-2xl font-bold tracking-tight">Predictive Modelling</h3>
+              <div className="flex items-center justify-between mb-2">
+                <h3 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+                  <BrainCircuit className="text-indigo-400" size={24} />
+                  Predictive Modelling
+                </h3>
+                <span className="px-3 py-1 bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-[10px] font-black uppercase tracking-widest rounded-full">AI Active</span>
+              </div>
+              <PredictiveTrendChart />
               <p className="text-slate-400 text-sm leading-relaxed max-w-sm">
-                Statistical projection indicates a <span className="text-cyan-400 font-bold font-mono">15% load surge</span> in the southern transit corridor starting at <span className="text-white font-mono">17:30</span>. 
-                Adaptive signal matrices have been pre-staged for activation.
+                Next 24H Statistical projection indicates a <span className="text-indigo-400 font-bold font-mono">15% load surge</span> in the southern transit corridor. 
+                Adaptive signal matrices have been pre-staged.
               </p>
            </div>
-           <div className="mt-12 pt-8 border-t border-white/5 flex items-center justify-between relative z-10">
+           <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between relative z-10">
               <div className="flex -space-x-3">
-                {[1,2,3].map(i => <div key={i} className="w-10 h-10 rounded-full border-2 border-slate-950 bg-slate-800 glass" />)}
-                <div className="w-10 h-10 rounded-full border-2 border-slate-950 bg-cyan-600 flex items-center justify-center text-[10px] font-black text-slate-950 shadow-lg">+4</div>
+                {[1,2,3].map(i => <div key={i} className="w-8 h-8 rounded-full border-2 border-slate-950 bg-slate-800 glass" />)}
+                <div className="w-8 h-8 rounded-full border-2 border-slate-950 bg-indigo-600 flex items-center justify-center text-[10px] font-black text-slate-950 shadow-lg">+4</div>
               </div>
-              <span className="text-[10px] text-slate-600 font-black uppercase tracking-widest italic">Shared System Sync</span>
+              <span className="text-[10px] text-slate-600 font-black uppercase tracking-widest italic">Neural Sync Enabled</span>
            </div>
         </div>
       </div>
