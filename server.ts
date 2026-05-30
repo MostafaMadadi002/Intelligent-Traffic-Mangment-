@@ -47,7 +47,7 @@ const db = {
     },
   ],
   users: [
-    { id: 'admin_seed', email: 'mostafamadadi.1382@gmail.com', role: 'admin', createdAt: new Date() }
+    { id: 'admin_seed', email: 'mostafamadadi.1382@gmail.com', password: 'admin123', role: 'admin', createdAt: new Date() }
   ],
   signals: {} as Record<string, any>,
   traffic_logs: [] as any[],
@@ -128,14 +128,18 @@ app.get('/api/cameras/:id/stream', (req, res) => {
 app.post('/api/auth/login', async (req, res) => {
   const { email, password } = req.body;
   
-  // Checking against in-memory users or hardcoded admin for demo
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Email and password are required' });
+  }
+
+  // Hardcoded fallback admin for demo
   if (email === 'admin@example.com' && password === 'admin123') {
     const token = jwt.sign({ email, role: 'admin' }, JWT_SECRET);
     return res.json({ token, user: { email, role: 'admin' } });
   }
   
   const user = db.users.find(u => u.email === email);
-  if (user) {
+  if (user && user.password === password) {
     const token = jwt.sign({ email: user.email, role: user.role }, JWT_SECRET);
     return res.json({ token, user: { email: user.email, role: user.role } });
   }

@@ -23,8 +23,14 @@ export default function Login() {
       localStorage.setItem('traffic_token', res.data.token);
       localStorage.setItem('traffic_user', JSON.stringify(res.data.user));
       navigate('/admin');
-    } catch (err) {
-      setError('Invalid email or password');
+    } catch (err: any) {
+      if (!err.response) {
+        setError('Server Connection Error: Backend not reachable');
+      } else if (err.response.status === 401) {
+        setError('Invalid email or password');
+      } else {
+        setError(err.response.data?.message || 'Authentication failed');
+      }
     }
   };
 
