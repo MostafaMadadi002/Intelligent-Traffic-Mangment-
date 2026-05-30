@@ -172,7 +172,7 @@ export default function TrafficMonitor() {
                 <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6 flex flex-wrap gap-3 md:gap-4">
                   <div className="glass-dark backdrop-blur-md px-3 md:px-5 py-2 md:py-3 rounded-[1rem] md:rounded-2xl border border-white/10">
                      <p className="text-[8px] md:text-[10px] text-slate-500 font-black uppercase tracking-widest mb-0.5 md:mb-1 leading-none">Node</p>
-                     <p className="text-sm md:text-xl font-bold text-white leading-none">{selectedCamera.id.split('-')[0]}</p>
+                     <p className="text-sm md:text-xl font-bold text-white leading-none">{selectedCamera?.id ? selectedCamera.id.split('-')[0] : '---'}</p>
                   </div>
                   <div className="glass-dark backdrop-blur-md px-3 md:px-5 py-2 md:py-3 rounded-[1rem] md:rounded-2xl border border-white/10">
                      <p className="text-[8px] md:text-[10px] text-slate-500 font-black uppercase tracking-widest mb-0.5 md:mb-1 leading-none">Load</p>

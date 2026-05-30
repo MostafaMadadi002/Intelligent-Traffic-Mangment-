@@ -23,10 +23,11 @@ export default function NotificationCenter() {
 
   useEffect(() => {
     socket.on('trafficUpdate', (data) => {
-      if (data.density > 80) {
+      if (data && data.density > 80 && data.cameraId) {
+        const nodeId = typeof data.cameraId === 'string' ? data.cameraId.split('-')[0] : 'Unknown';
         addNotification({
           title: 'High Density Alert',
-          message: `Gridlock detected at node: ${data.cameraId.split('-')[0]} sector.`,
+          message: `Gridlock detected at node: ${nodeId} sector.`,
           type: 'warning'
         });
       }
@@ -76,7 +77,7 @@ export default function NotificationCenter() {
                 <p className="text-[10px] font-bold text-slate-400 mt-1 leading-relaxed">{notif.message}</p>
               </div>
               <button 
-                onClick={() => setNotifications(prev => (Array.isArray(prev) ? prev.filter(n => n.id !== notif.id) : []))}
+                onClick={() => setNotifications(prev => (Array.isArray(prev) ? prev.filter(n => n && n.id !== notif.id) : []))}
                 className="text-slate-600 hover:text-white transition-colors self-start"
               >
                 <X size={14} />
