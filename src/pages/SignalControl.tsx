@@ -119,7 +119,7 @@ export default function SignalControl() {
                       onClick={() => handleExportCSV(camera)}
                       className="p-2.5 md:p-3 glass-dark hover:bg-white/5 text-slate-500 hover:text-cyan-400 rounded-xl md:rounded-2xl border border-white/5 transition-all shadow-xl active:scale-90"
                     >
-                      <Download size={16} md:size={18} />
+                      <Download size={18} />
                     </button>
                   </div>
                 </div>
@@ -129,7 +129,7 @@ export default function SignalControl() {
                     <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-slate-900 border border-white/10 px-3 py-2 rounded-lg text-[10px] w-32 text-center pointer-events-none opacity-0 group-hover/tooltip:opacity-100 transition-opacity z-20 shadow-2xl">
                       Next phase transition countdown
                     </div>
-                    <Timer size={16} md:size={18} className="text-slate-500" />
+                    <Timer size={18} className="text-slate-500" />
                     <span className="text-xl md:text-2xl font-black text-white font-mono leading-none">{signal.duration}s</span>
                     <span className="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Cycle Delta</span>
                   </div>
@@ -137,7 +137,7 @@ export default function SignalControl() {
                     <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-slate-900 border border-white/10 px-3 py-2 rounded-lg text-[10px] w-32 text-center pointer-events-none opacity-0 group-hover/tooltip:opacity-100 transition-opacity z-20 shadow-2xl">
                       Real-time lane density (Neural)
                     </div>
-                    <Activity size={16} md:size={18} className="text-slate-500" />
+                    <Activity size={18} className="text-slate-500" />
                     <span className="text-xl md:text-2xl font-black text-cyan-400 font-mono leading-none">74%</span>
                     <span className="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Current Load</span>
                   </div>

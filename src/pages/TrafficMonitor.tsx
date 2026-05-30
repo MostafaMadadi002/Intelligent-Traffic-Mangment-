@@ -33,7 +33,10 @@ export default function TrafficMonitor() {
       if (!isMounted || !data) return;
       if (selectedCamera && data.cameraId === selectedCamera.id) {
         setDetection(data);
-        setHistory(prev => [data, ...prev].slice(0, 5));
+        setHistory(prev => {
+          const current = Array.isArray(prev) ? prev : [];
+          return [data, ...current].slice(0, 5);
+        });
       }
     });
 
@@ -178,7 +181,7 @@ export default function TrafficMonitor() {
                 </div>
 
                 <button className="absolute bottom-4 right-4 md:bottom-6 md:right-6 p-2 md:p-3 glass-dark hover:bg-white/10 rounded-xl md:rounded-2xl transition-all text-white border border-white/10 group">
-                  <Maximize2 size={16} md:size={20} className="group-hover:scale-110 transition-transform" />
+                  <Maximize2 size={20} className="group-hover:scale-110 transition-transform" />
                 </button>
               </>
             ) : (

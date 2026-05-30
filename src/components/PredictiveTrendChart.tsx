@@ -8,13 +8,18 @@ export default function PredictiveTrendChart() {
   const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
-    api.get('/analytics/predictions').then(res => setData(res.data));
+    api.get('/analytics/predictions')
+      .then(res => setData(Array.isArray(res.data) ? res.data : []))
+      .catch(err => {
+        console.warn('[Predictions] Fetch failed:', err);
+        setData([]);
+      });
   }, []);
 
   return (
     <div className="h-[250px] w-full">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={data}>
+        <AreaChart data={Array.isArray(data) ? data : []}>
           <defs>
             <linearGradient id="colorPredicted" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>

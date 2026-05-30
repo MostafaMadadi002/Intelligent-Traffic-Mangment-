@@ -15,9 +15,9 @@ export default function NotificationCenter() {
 
   const addNotification = (notif: Omit<Notification, 'id'>) => {
     const id = Math.random().toString(36).substr(2, 9);
-    setNotifications(prev => [...prev, { ...notif, id }]);
+    setNotifications(prev => (Array.isArray(prev) ? [...prev, { ...notif, id }] : [{ ...notif, id }]));
     setTimeout(() => {
-      setNotifications(prev => prev.filter(n => n.id !== id));
+      setNotifications(prev => (Array.isArray(prev) ? prev.filter(n => n.id !== id) : []));
     }, 5000);
   };
 
@@ -49,7 +49,7 @@ export default function NotificationCenter() {
   return (
     <div className="fixed top-20 right-4 left-4 md:left-auto md:right-6 z-[100] space-y-3 w-auto md:w-80 pointer-events-none">
       <AnimatePresence>
-        {notifications.map(notif => (
+        {(Array.isArray(notifications) ? notifications : []).map(notif => (
           <motion.div
             key={notif.id}
             initial={{ opacity: 0, y: -20, scale: 0.95 }}
@@ -76,7 +76,7 @@ export default function NotificationCenter() {
                 <p className="text-[10px] font-bold text-slate-400 mt-1 leading-relaxed">{notif.message}</p>
               </div>
               <button 
-                onClick={() => setNotifications(prev => prev.filter(n => n.id !== notif.id))}
+                onClick={() => setNotifications(prev => (Array.isArray(prev) ? prev.filter(n => n.id !== notif.id) : []))}
                 className="text-slate-600 hover:text-white transition-colors self-start"
               >
                 <X size={14} />
