@@ -10,8 +10,8 @@ import AdminPanel from './pages/AdminPanel';
 import Login from './pages/Login';
 
 const ProtectedRoute = ({ children }: { children: any }) => {
-  const isAuthenticated = !!localStorage.getItem('traffic_token');
-  return isAuthenticated ? children : <Navigate to="/login" />;
+  // Authentication disabled per user request to allow direct access
+  return children;
 };
 
 const AnimatedRoutes = () => {
@@ -26,7 +26,7 @@ const AnimatedRoutes = () => {
         transition={{ duration: 0.3, ease: 'easeOut' }}
       >
         <Routes location={location}>
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Navigate to="/" replace />} />
           <Route 
             path="/" 
             element={

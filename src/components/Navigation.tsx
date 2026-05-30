@@ -15,16 +15,11 @@ export default function Navigation() {
     { name: 'Live Monitoring', path: '/monitor', icon: Monitor },
     { name: 'Signal Control', path: '/signals', icon: Activity },
     { name: 'Analytics', path: '/analytics', icon: MapPin },
+    { name: 'Admin Panel', path: '/admin', icon: Settings },
   ];
 
-  if (isAuthenticated) {
-    navItems.push({ name: 'Admin Panel', path: '/admin', icon: Settings });
-  }
-
   const handleLogout = () => {
-    localStorage.removeItem('traffic_token');
-    localStorage.removeItem('traffic_user');
-    navigate('/login');
+    // Logout disabled per user request
     setIsOpen(false);
   };
 
@@ -89,34 +84,18 @@ export default function Navigation() {
 
     return (
       <div className="pt-6 border-t border-white/5 space-y-4">
-        {isAuthenticated ? (
-          <div className="flex items-center gap-3 p-3 rounded-2xl bg-white/[0.02] border border-white/5 shadow-inner group/user hover:bg-white/[0.05] transition-all duration-300">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 flex items-center justify-center font-bold text-indigo-400 text-xs shadow-lg group-hover/user:scale-105 transition-transform">
-              {initials}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-0.5">Authorized Operative</p>
-              <p className="text-xs font-bold text-white truncate">{displayName}</p>
-              <button 
-                onClick={handleLogout}
-                className="text-[9px] text-red-500/80 hover:text-red-400 transition-colors uppercase font-black tracking-[0.15em] mt-1.5 flex items-center gap-1 group/log"
-              >
-                <LogOut size={10} className="group-hover/log:-translate-x-0.5 transition-transform" />
-                Terminate Link
-              </button>
-            </div>
+        <div className="flex items-center gap-3 p-3 rounded-2xl bg-white/[0.02] border border-white/5 shadow-inner group/user hover:bg-white/[0.05] transition-all duration-300">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 flex items-center justify-center font-bold text-indigo-400 text-xs shadow-lg group-hover/user:scale-105 transition-transform">
+            {initials}
           </div>
-        ) : (
-          <Link
-            to="/login"
-            className="flex items-center gap-3 px-4 py-3 rounded-2xl w-full text-slate-400 hover:bg-white/5 hover:text-white transition-all border border-transparent hover:border-white/5 group"
-          >
-            <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center group-hover:text-cyan-400 transition-colors">
-              <Settings size={18} />
-            </div>
-            <span className="text-xs font-bold uppercase tracking-widest">Admin Access</span>
-          </Link>
-        )}
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-0.5">Authorized Operative</p>
+            <p className="text-xs font-bold text-white truncate">{displayName}</p>
+            <p className="text-[9px] text-cyan-400/80 uppercase font-black tracking-[0.15em] mt-1.5 flex items-center gap-1">
+               Status: Node Active
+            </p>
+          </div>
+        </div>
       </div>
     );
   };
