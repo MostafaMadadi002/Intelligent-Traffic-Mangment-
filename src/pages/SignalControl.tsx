@@ -12,7 +12,7 @@ export default function SignalControl() {
   useEffect(() => {
     Promise.all([
       api.get('/cameras'),
-      api.get('/api/signals')
+      api.get('/signals')
     ]).then(([camRes, sigRes]) => {
       setCameras(camRes.data);
       setSignals(sigRes.data);
@@ -28,7 +28,7 @@ export default function SignalControl() {
   }, []);
 
   const handleManualOverride = (cameraId: string, state: string) => {
-    api.post('/api/signals/override', { cameraId, state, duration: 30 }).then(res => {
+    api.post('/signals/override', { cameraId, state, duration: 30 }).then(res => {
       setSignals((prev: any) => ({ ...prev, [cameraId]: res.data }));
     });
   };

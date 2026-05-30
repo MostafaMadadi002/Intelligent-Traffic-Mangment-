@@ -77,8 +77,13 @@ export default function Navigation() {
   );
 
   const UserSection = () => {
-    const userStr = localStorage.getItem('traffic_user');
-    const user = userStr ? JSON.parse(userStr) : null;
+    let user = null;
+    try {
+      const userStr = localStorage.getItem('traffic_user');
+      user = userStr ? JSON.parse(userStr) : null;
+    } catch (e) {
+      console.warn('Failed to parse user from localStorage', e);
+    }
     const displayName = user?.name || 'System Admin';
     const initials = displayName.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2);
 
