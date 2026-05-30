@@ -87,44 +87,13 @@ export default function Home() {
     return '0 0 40px rgba(16, 185, 129, 0.8)';
   };
 
-  const [isRecalibrating, setIsRecalibrating] = useState(false);
-
   const handleRecalibrate = () => {
-    setIsRecalibrating(true);
-    setTimeout(() => setIsRecalibrating(false), 3000);
+    // Calibration logic simplified to just logs as overlay is removed
+    console.log("Recalibrating matrices...");
   };
 
   return (
     <div className="space-y-6 md:space-y-8 max-w-7xl mx-auto">
-      <AnimatePresence>
-        {isRecalibrating && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] bg-[#020617]/90 backdrop-blur-md flex flex-col items-center justify-center pointer-events-auto p-6"
-          >
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-              className="w-16 h-16 md:w-24 md:h-24 border-4 border-cyan-500/20 border-t-cyan-500 rounded-full mb-8"
-            />
-            <div className="text-center space-y-2">
-              <h3 className="text-xl md:text-2xl font-black text-white uppercase tracking-widest">Neural Recalibration</h3>
-              <p className="text-slate-500 font-mono text-[10px] md:text-sm animate-pulse">SYNCHRONIZING INTERSECTION MATRICES...</p>
-            </div>
-            <div className="mt-12 w-full max-w-xs h-1 bg-white/5 rounded-full overflow-hidden border border-white/10">
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: "100%" }}
-                transition={{ duration: 3 }}
-                className="h-full bg-cyan-500 shadow-[0_0_15px_#06b6d4]"
-              />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       <header className="flex flex-col md:flex-row md:items-center justify-between mb-4 md:mb-8 pb-6 border-b border-white/5 relative gap-6">
         <div className="absolute -bottom-[1px] left-0 w-32 h-[2px] bg-cyan-500 shadow-[0_0_10px_#06b6d4]" />
         <div>
