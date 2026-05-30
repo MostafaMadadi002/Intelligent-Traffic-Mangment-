@@ -12,17 +12,17 @@ import * as admin from 'firebase-admin';
 dotenv.config();
 
 // --- Firebase Admin Setup ---
-if (!admin.apps.length) {
-  try {
+let fdb: any = null;
+try {
+  if (!admin.apps.length) {
     admin.initializeApp({
       credential: admin.credential.applicationDefault()
     });
-  } catch (err) {
-    console.error('Firebase Admin Initialization Error:', err);
   }
+  fdb = admin.firestore();
+} catch (err) {
+  console.warn('Firebase Admin could not be initialized. Falling back to in-memory mode.', err);
 }
-
-const fdb = admin.firestore();
 
 // --- In-Memory Data Storage ---
 const db = {
@@ -68,6 +68,7 @@ const db = {
 
 // --- Seed Data to Firestore ---
 async function seedFirebase() {
+  if (!fdb) return;
   try {
     const adminEmail = 'mostafamadadi.1382@gmail.com';
     const userRef = fdb.collection('users').doc('admin_seed');
@@ -179,22 +180,21 @@ app.post('/api/auth/login', async (req, res) => {
   }
   
   try {
-    const userSnapshot = await fdb.collection('users').where('email', '==', email).limit(1).get();
-    
-    if (userSnapshot.empty) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
-
-    const userData = userSnapshot.docs[0].data();
-    
-    // Check password (In real world, use bcrypt.compare)
-    if (userData.password === password) {
-      const token = jwt.sign({ email: userData.email, role: userData.role }, JWT_SECRET);
-      return res.json({ token, user: { email: userData.email, role: userData.role } });
+    if (fdb) {
+      const userSnapshot = await fdb.collection('users').where('email', '==', email).limit(1).get();
+      
+      if (!userSnapshot.empty) {
+        const userData = userSnapshot.docs[0].data();
+        
+        // Check password (In real world, use bcrypt.compare)
+        if (userData.password === password) {
+          const token = jwt.sign({ email: userData.email, role: userData.role }, JWT_SECRET);
+          return res.json({ token, user: { email: userData.email, role: userData.role } });
+        }
+      }
     }
   } catch (err) {
-    console.error('Login error:', err);
-    return res.status(500).json({ message: 'Database connection error' });
+    console.error('Login error (Firestore):', err);
   }
 
   res.status(401).json({ message: 'Invalid credentials' });
