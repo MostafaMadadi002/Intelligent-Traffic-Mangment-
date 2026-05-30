@@ -7,7 +7,22 @@ import { createServer as createViteServer } from 'vite';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import dotenv from 'dotenv';
+import * as admin from 'firebase-admin';
+
 dotenv.config();
+
+// --- Firebase Admin Setup ---
+if (!admin.apps.length) {
+  try {
+    admin.initializeApp({
+      credential: admin.credential.applicationDefault()
+    });
+  } catch (err) {
+    console.error('Firebase Admin Initialization Error:', err);
+  }
+}
+
+const fdb = admin.firestore();
 
 // --- In-Memory Data Storage ---
 const db = {
@@ -46,13 +61,32 @@ const db = {
       }
     },
   ],
-  users: [
-    { id: 'admin_seed', email: 'mostafamadadi.1382@gmail.com', password: 'admin123', role: 'admin', createdAt: new Date() }
-  ],
   signals: {} as Record<string, any>,
   traffic_logs: [] as any[],
   signal_logs: [] as any[]
 };
+
+// --- Seed Data to Firestore ---
+async function seedFirebase() {
+  try {
+    const adminEmail = 'mostafamadadi.1382@gmail.com';
+    const userRef = fdb.collection('users').doc('admin_seed');
+    const doc = await userRef.get();
+    
+    if (!doc.exists) {
+      console.log('Seeding admin user to Firestore...');
+      await userRef.set({
+        email: adminEmail,
+        password: 'admin123',
+        role: 'admin',
+        createdAt: admin.firestore.FieldValue.serverTimestamp()
+      });
+    }
+  } catch (err) {
+    console.error('Error seeding Firestore:', err);
+  }
+}
+seedFirebase();
 
 // Initialize signals for cameras
 db.cameras.forEach(cam => {
@@ -138,10 +172,23 @@ app.post('/api/auth/login', async (req, res) => {
     return res.json({ token, user: { email, role: 'admin' } });
   }
   
-  const user = db.users.find(u => u.email === email);
-  if (user && user.password === password) {
-    const token = jwt.sign({ email: user.email, role: user.role }, JWT_SECRET);
-    return res.json({ token, user: { email: user.email, role: user.role } });
+  try {
+    const userSnapshot = await fdb.collection('users').where('email', '==', email).limit(1).get();
+    
+    if (userSnapshot.empty) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    const userData = userSnapshot.docs[0].data();
+    
+    // Check password (In real world, use bcrypt.compare)
+    if (userData.password === password) {
+      const token = jwt.sign({ email: userData.email, role: userData.role }, JWT_SECRET);
+      return res.json({ token, user: { email: userData.email, role: userData.role } });
+    }
+  } catch (err) {
+    console.error('Login error:', err);
+    return res.status(500).json({ message: 'Database connection error' });
   }
 
   res.status(401).json({ message: 'Invalid credentials' });
