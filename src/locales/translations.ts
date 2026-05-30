@@ -40,6 +40,7 @@ export const translations = {
     cameraManagement: "Camera Management",
     addCamera: "Add Camera",
     downloadReport: "Download Report",
+    exportReport: "Export Report",
     
     // Settings
     settingsTitle: "Settings",
@@ -96,6 +97,7 @@ export const translations = {
     cameraManagement: "مدیریت دوربینها",
     addCamera: "افزودن دوربین",
     downloadReport: "دانلود گزارش",
+    exportReport: "خروجی گزارش",
     
     // Settings
     settingsTitle: "تنظیمات",

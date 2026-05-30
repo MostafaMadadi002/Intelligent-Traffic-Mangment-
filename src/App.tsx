@@ -6,6 +6,7 @@ import TrafficMonitor from './pages/TrafficMonitor';
 import SignalControl from './pages/SignalControl';
 import Analytics from './pages/Analytics';
 import AdminPanel from './pages/AdminPanel';
+import Settings from './pages/Settings';
 import ErrorBoundary from './components/ErrorBoundary';
 import { useEffect } from 'react';
 import { LanguageProvider, useLanguage } from './locales/LanguageContext';
@@ -26,6 +27,7 @@ function AppContent() {
           <Route path="/signals" element={<SignalControl />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>

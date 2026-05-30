@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Activity, LayoutDashboard, Monitor, Settings, MapPin, LogOut, Menu, X, Languages } from 'lucide-react';
+import { Activity, LayoutDashboard, Monitor, Settings, MapPin, LogOut, Menu, X, Languages, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import SystemStatus from './SystemStatus';
 import { useLanguage } from '../locales/LanguageContext';
@@ -16,7 +16,8 @@ export default function Navigation() {
     { name: t('monitoring'), path: '/monitor', icon: Monitor },
     { name: t('signalControl'), path: '/signals', icon: Activity },
     { name: t('analytics'), path: '/analytics', icon: MapPin },
-    { name: t('admin'), path: '/admin', icon: Settings },
+    { name: t('admin'), path: '/admin', icon: Shield },
+    { name: t('settings'), path: '/settings', icon: Settings },
   ];
 
   useEffect(() => {
