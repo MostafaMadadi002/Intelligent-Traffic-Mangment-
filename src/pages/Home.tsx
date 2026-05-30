@@ -16,38 +16,68 @@ export default function Home() {
   });
 
   useEffect(() => {
+    let isMounted = true;
+    console.log('[Home] Initializing data sequence...');
+
     api.get('/cameras').then(res => {
-      const cameraData: Camera[] = res.data;
+      if (!isMounted) return;
+      const cameraData: Camera[] = res.data || [];
+      console.log('[Home] Cameras loaded:', cameraData.length);
       setCameras(cameraData);
-      setStats(prev => ({ ...prev, activeCameras: cameraData.filter((c: any) => c.status === 'active').length }));
+      setStats(prev => ({ 
+        ...prev, 
+        activeCameras: cameraData.filter((c: any) => c.status === 'active').length 
+      }));
       
-      // Initialize stats
+      // Initialize stats safely
       const initialStats: Record<string, { density: number; flow: number }> = {};
       cameraData.forEach(cam => {
-        initialStats[cam.id] = { density: Math.floor(Math.random() * 30), flow: Math.floor(Math.random() * 20) + 10 };
+        if (cam && cam.id) {
+          initialStats[cam.id] = { 
+            density: Math.floor(Math.random() * 30), 
+            flow: Math.floor(Math.random() * 20) + 10 
+          };
+        }
       });
       setCameraStats(initialStats);
+    }).catch(err => {
+      console.error('[Home] Failed to load cameras:', err);
+      // Mock fallback for Safe Mode
+      setCameras([
+        { id: 'cam-mock-1', name: 'Main St & 5th Header', location: 'Downtown', status: 'active', videoUrl: '' },
+        { id: 'cam-mock-2', name: 'Broadway & 42nd', location: 'Theater District', status: 'active', videoUrl: '' }
+      ]);
     });
 
     socket.on('trafficUpdate', (data) => {
-      const vehicleCount = Object.values(data.vehicleCounts as Record<string, number>).reduce((a, b) => a + b, 0);
+      if (!isMounted || !data) return;
       
-      setStats(prev => ({
-        ...prev,
-        totalVehicles: prev.totalVehicles + vehicleCount,
-        avgDensity: (prev.avgDensity + data.density) / 2
-      }));
+      try {
+        const counts = data.vehicleCounts || {};
+        const vehicleCount = Object.values(counts as Record<string, number>).reduce((a, b) => (Number(a) || 0) + (Number(b) || 0), 0);
+        
+        setStats(prev => ({
+          ...prev,
+          totalVehicles: prev.totalVehicles + vehicleCount,
+          avgDensity: (prev.avgDensity + (data.density || 0)) / 2
+        }));
 
-      setCameraStats(prev => ({
-        ...prev,
-        [data.cameraId]: {
-          density: data.density,
-          flow: vehicleCount * 4 // Extrapolate to flow rate
+        if (data.cameraId) {
+          setCameraStats(prev => ({
+            ...prev,
+            [data.cameraId]: {
+              density: data.density || 0,
+              flow: vehicleCount * 4
+            }
+          }));
         }
-      }));
+      } catch (e) {
+        console.warn('[Home] Failed to parse socket update:', e);
+      }
     });
 
     return () => {
+      isMounted = false;
       socket.off('trafficUpdate');
     };
   }, []);

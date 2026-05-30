@@ -10,19 +10,25 @@ export default function SignalControl() {
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
+    let isMounted = true;
     Promise.all([
       api.get('/cameras'),
       api.get('/signals')
     ]).then(([camRes, sigRes]) => {
-      setCameras(camRes.data);
-      setSignals(sigRes.data);
+      if (!isMounted) return;
+      setCameras(camRes.data || []);
+      setSignals(sigRes.data || {});
+    }).catch(err => {
+      console.warn('[Signals] Data fetch failed:', err);
     });
 
     socket.on('signalUpdate', (data) => {
+      if (!isMounted || !data) return;
       setSignals((prev: any) => ({ ...prev, [data.cameraId]: data }));
     });
 
     return () => {
+      isMounted = false;
       socket.off('signalUpdate');
     };
   }, []);
