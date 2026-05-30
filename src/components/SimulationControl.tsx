@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import { Settings2, Play, Pause, Zap } from 'lucide-react';
 import api from '../lib/api';
 import socket from '../lib/socket';
+import { useLanguage } from '../locales/LanguageContext';
 
 export default function SimulationControl() {
+  const { t, language } = useLanguage();
   const [status, setStatus] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -32,11 +34,20 @@ export default function SimulationControl() {
 
   if (loading || !status) return null;
 
+  const patterns: Record<string, string> = {
+    normal: language === 'fa' ? 'عادی' : 'Normal',
+    rush_hour: language === 'fa' ? 'ساعت شلوغی' : 'Rush Hour',
+    night: language === 'fa' ? 'شب' : 'Night',
+    accident: language === 'fa' ? 'تصادف' : 'Accident'
+  };
+
   return (
     <div className="glass px-6 py-3 rounded-2xl border border-white/10 flex items-center gap-6">
       <div className="flex items-center gap-2">
         <Settings2 size={16} className="text-cyan-400" />
-        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Simulation Engine</span>
+        <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+           {language === 'fa' ? 'موتور شبیه‌ساز' : 'Simulation Engine'}
+        </span>
       </div>
 
       <div className="h-6 w-[1px] bg-white/10" />
@@ -52,7 +63,7 @@ export default function SimulationControl() {
               : 'bg-white/5 border-white/10 text-slate-500 hover:text-slate-300'
             }`}
           >
-            {p.replace('_', ' ')}
+            {patterns[p]}
           </button>
         ))}
       </div>
@@ -75,7 +86,9 @@ export default function SimulationControl() {
           <div className="flex items-center gap-1.5">
             <Zap size={10} className={status.isActive ? 'text-emerald-400 animate-pulse' : 'text-slate-600'} />
             <span className="text-[8px] font-black uppercase tracking-widest text-white">
-              {status.isActive ? 'Active' : 'Paused'}
+              {status.isActive 
+                ? (language === 'fa' ? 'فعال' : 'Active') 
+                : (language === 'fa' ? 'متوقف' : 'Paused')}
             </span>
           </div>
           <span className="text-[7px] font-bold text-slate-600 uppercase tracking-tighter">Instance v4.2S</span>

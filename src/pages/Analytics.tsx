@@ -5,8 +5,10 @@ import {
 import { Download, Calendar, TrendingUp, Clock, AlertCircle, BrainCircuit } from 'lucide-react';
 import api from '../lib/api';
 import PredictiveTrendChart from '../components/PredictiveTrendChart';
+import { useLanguage } from '../locales/LanguageContext';
 
 export default function Analytics() {
+  const { t, language } = useLanguage();
   const [data, setData] = useState<any[]>([]);
   const [activeTab, setActiveTab] = useState('volume');
 
@@ -24,32 +26,37 @@ export default function Analytics() {
     return () => { isMounted = false; };
   }, []);
 
-  const COLORS = ['#3b82f6', '#6366f1', '#8b5cf6', '#10b981'];
-
   return (
     <div className="space-y-8 max-w-7xl mx-auto">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 py-4 border-b border-white/10">
         <div>
-          <h2 className="text-3xl font-light text-white italic">Historical <span className="font-bold not-italic">Neural Insights</span></h2>
-          <p className="text-slate-500 text-sm">Longitudinal traffic telemetry and predictive congestion modelling.</p>
+          <h2 className="text-3xl font-light text-white italic">
+            {language === 'fa' ? 'بینش‌های ' : 'Historical '}
+            <span className="font-bold not-italic text-cyan-400">
+              {language === 'fa' ? 'عصبی تاریخی' : 'Neural Insights'}
+            </span>
+          </h2>
+          <p className="text-slate-500 text-sm">
+            {language === 'fa' ? 'تری‌متری ترافیک طولی و مدل‌سازی پیش‌گویانه تراکم.' : 'Longitudinal traffic telemetry and predictive congestion modelling.'}
+          </p>
         </div>
         <div className="flex gap-3">
           <button className="flex items-center gap-2 px-5 py-2.5 glass text-xs font-black uppercase tracking-widest text-slate-400 hover:text-white transition-all rounded-xl">
             <Calendar size={16} />
-            May 22, 2026
+            {language === 'fa' ? '۱ خرداد ۱۴۰۵' : 'May 22, 2026'}
           </button>
           <a href="/api/reports/daily" download className="flex items-center gap-2 px-6 py-2.5 bg-cyan-500 text-slate-950 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-cyan-400 transition-all shadow-[0_0_20px_rgba(6,182,212,0.4)]">
             <Download size={16} />
-            Export data
+            {t('exportReport')}
           </a>
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {[
-          { label: 'System Peak', value: '18:00', sub: '24HR Window', icon: Clock, color: 'cyan' },
-          { label: 'Flow Delta', value: '+12.4%', sub: 'Weekly Avg', icon: TrendingUp, color: 'emerald' },
-          { label: 'Mean Latency', value: '12m', sub: 'City Transit', icon: AlertCircle, color: 'amber' }
+          { label: language === 'fa' ? 'اوج سیستم' : 'System Peak', value: '18:00', sub: language === 'fa' ? 'بازه ۲۴ ساعته' : '24HR Window', icon: Clock, color: 'cyan' },
+          { label: language === 'fa' ? 'تغییر جریان' : 'Flow Delta', value: '+12.4%', sub: language === 'fa' ? 'میانگین هفتگی' : 'Weekly Avg', icon: TrendingUp, color: 'emerald' },
+          { label: language === 'fa' ? 'میانگین تاخیر' : 'Mean Latency', value: '12m', sub: language === 'fa' ? 'ترانزیت شهری' : 'City Transit', icon: AlertCircle, color: 'amber' }
         ].map((item, i) => (
           <div key={item.label} className="glass p-6 rounded-3xl hover:bg-white/10 transition-colors group">
             <div className="flex justify-between items-start mb-6">
@@ -59,7 +66,7 @@ export default function Analytics() {
             </div>
             <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">{item.label}</p>
             <div className="flex items-baseline gap-2">
-              <p className="text-2xl font-bold text-white font-mono">{item.value}</p>
+              <p className="text-2xl font-bold text-white font-mono tracking-normal">{item.value}</p>
               <p className="text-[8px] font-black text-slate-600 uppercase tracking-tighter">{item.sub}</p>
             </div>
           </div>
@@ -70,19 +77,27 @@ export default function Analytics() {
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(6,182,212,0.05),transparent_70%)]" />
         <div className="flex flex-col md:flex-row items-center justify-between mb-12 relative z-10 gap-6">
           <div>
-            <h3 className="text-2xl font-bold text-white tracking-tight">Total Transit Volume</h3>
-            <p className="text-sm text-slate-500">Aggregate vehicle throughput via telemetry sensors</p>
+            <h3 className="text-2xl font-bold text-white tracking-tight">
+              {language === 'fa' ? 'حجم کل ترانزیت' : 'Total Transit Volume'}
+            </h3>
+            <p className="text-sm text-slate-500">
+              {language === 'fa' ? 'مجموع تردد وسایل نقلیه از طریق حسگرهای تله‌متری' : 'Aggregate vehicle throughput via telemetry sensors'}
+            </p>
           </div>
           <div className="glass-dark p-1 rounded-xl flex gap-1 border border-white/10">
-            {['Volume', 'Density', 'Load'].map(tab => (
+            {[
+              { id: 'volume', label: language === 'fa' ? 'حجم' : 'Volume' },
+              { id: 'density', label: language === 'fa' ? 'تراکم' : 'Density' },
+              { id: 'load', label: language === 'fa' ? 'بار' : 'Load' }
+            ].map(tab => (
               <button
-                key={tab}
-                onClick={() => setActiveTab(tab.toLowerCase())}
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
                 className={`px-5 py-2 rounded-lg text-[10px] font-black tracking-widest uppercase transition-all ${
-                  activeTab === tab.toLowerCase() ? 'bg-cyan-500 text-slate-950 shadow-lg' : 'text-slate-500 hover:text-slate-200'
+                  activeTab === tab.id ? 'bg-cyan-500 text-slate-950 shadow-lg' : 'text-slate-500 hover:text-slate-200'
                 }`}
               >
-                {tab}
+                {tab.label}
               </button>
             ))}
           </div>
@@ -130,7 +145,9 @@ export default function Analytics() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="glass rounded-3xl p-8 border border-white/5">
-          <h3 className="text-sm font-black uppercase text-slate-500 tracking-[0.2em] mb-8 font-mono">Real-time Load Variance</h3>
+          <h3 className="text-sm font-black uppercase text-slate-500 tracking-[0.2em] mb-8 font-mono">
+            {language === 'fa' ? 'واریانس بار در لحظه' : 'Real-time Load Variance'}
+          </h3>
           <div className="h-[300px]">
              <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={(Array.isArray(data) ? data : []).slice(8, 16)}>
@@ -145,8 +162,8 @@ export default function Analytics() {
              </ResponsiveContainer>
           </div>
           <div className="mt-8 flex gap-6 text-[9px] font-black text-slate-500 uppercase tracking-widest pl-2">
-            <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.5)]" /> Normal Flow</div>
-            <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]" /> High Saturation</div>
+            <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full bg-cyan-500 shadow-[0_0_8px_rgba(6,182,212,0.5)]" /> {language === 'fa' ? 'جریان عادی' : 'Normal Flow'}</div>
+            <div className="flex items-center gap-2"><div className="w-2.5 h-2.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]" /> {language === 'fa' ? 'اشباع بالا' : 'High Saturation'}</div>
           </div>
         </div>
 
@@ -156,22 +173,27 @@ export default function Analytics() {
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-2xl font-bold tracking-tight flex items-center gap-2">
                   <BrainCircuit className="text-indigo-400" size={24} />
-                  Predictive Modelling
+                  {language === 'fa' ? 'مدل‌سازی پیش‌گویانه' : 'Predictive Modelling'}
                 </h3>
-                <span className="px-3 py-1 bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-[10px] font-black uppercase tracking-widest rounded-full">AI Active</span>
+                <span className="px-3 py-1 bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-[10px] font-black uppercase tracking-widest rounded-full">
+                  {language === 'fa' ? 'هوش مصنوعی فعال' : 'AI Active'}
+                </span>
               </div>
               <PredictiveTrendChart />
               <p className="text-slate-400 text-sm leading-relaxed max-w-sm">
-                Next 24H Statistical projection indicates a <span className="text-indigo-400 font-bold font-mono">15% load surge</span> in the southern transit corridor. 
-                Adaptive signal matrices have been pre-staged.
+                {language === 'fa' 
+                  ? 'برآورد آماری ۲۴ ساعت آینده نشان‌دهنده ۱۵٪ افزایش بار در کریدور ترانزیت جنوبی است. ماتریکس‌های سیگنال تطبیقی از پیش آماده شده‌اند.'
+                  : 'Next 24H Statistical projection indicates a 15% load surge in the southern transit corridor. Adaptive signal matrices have been pre-staged.'}
               </p>
            </div>
            <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-between relative z-10">
               <div className="flex -space-x-3">
                 {[1,2,3].map(i => <div key={i} className="w-8 h-8 rounded-full border-2 border-slate-950 bg-slate-800 glass" />)}
-                <div className="w-8 h-8 rounded-full border-2 border-slate-950 bg-indigo-600 flex items-center justify-center text-[10px] font-black text-slate-950 shadow-lg">+4</div>
+                <div className="w-8 h-8 rounded-full border-2 border-slate-950 bg-indigo-600 flex items-center justify-center text-[10px] font-black text-slate-950 shadow-lg tracking-normal">+4</div>
               </div>
-              <span className="text-[10px] text-slate-600 font-black uppercase tracking-widest italic">Neural Sync Enabled</span>
+              <span className="text-[10px] text-slate-600 font-black uppercase tracking-widest italic">
+                {language === 'fa' ? 'همگام‌سازی عصبی فعال' : 'Neural Sync Enabled'}
+              </span>
            </div>
         </div>
       </div>

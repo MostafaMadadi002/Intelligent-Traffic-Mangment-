@@ -3,8 +3,10 @@ import { Power, Timer, Activity, Zap, RefreshCw, Search, Download } from 'lucide
 import { motion } from 'motion/react';
 import api from '../lib/api';
 import socket from '../lib/socket';
+import { useLanguage } from '../locales/LanguageContext';
 
 export default function SignalControl() {
+  const { t, language } = useLanguage();
   const [signals, setSignals] = useState<any>({});
   const [cameras, setCameras] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -75,18 +77,25 @@ export default function SignalControl() {
     <div className="space-y-8">
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-white/5 pb-8">
         <div>
-          <h2 className="text-3xl font-light text-white italic">Synchronized <span className="font-bold not-italic">Traffic Pulse</span></h2>
-          <p className="text-slate-500 text-sm">Autonomous adaptive signal timing and manual system overrides.</p>
+          <h2 className="text-3xl font-light text-white italic">
+            {language === 'fa' ? 'نبض ' : 'Synchronized '}
+            <span className="font-bold not-italic text-cyan-400">
+              {language === 'fa' ? 'ترافیک هماهنگ' : 'Traffic Pulse'}
+            </span>
+          </h2>
+          <p className="text-slate-500 text-sm">
+            {language === 'fa' ? 'زمان‌بندی منطبق خودکار سیگنال و لغو دستی سیستم.' : 'Autonomous adaptive signal timing and manual system overrides.'}
+          </p>
         </div>
 
         <div className="relative group w-full md:w-80">
-          <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-cyan-400 transition-colors" />
+          <Search size={18} className={`absolute ${language === 'fa' ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-cyan-400 transition-colors`} />
           <input 
             type="text"
-            placeholder="Search signals or sectors..."
+            placeholder={language === 'fa' ? 'جستجوی سیگنال یا بخش...' : 'Search signals or sectors...'}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-12 pr-4 py-3.5 glass-dark rounded-2xl text-xs font-bold uppercase tracking-widest focus:outline-none focus:ring-1 focus:ring-cyan-500/50 transition-all border border-white/5 placeholder:text-slate-600"
+            className={`w-full ${language === 'fa' ? 'pr-12 pl-4' : 'pl-12 pr-4'} py-3.5 glass-dark rounded-2xl text-xs font-bold uppercase tracking-widest focus:outline-none focus:ring-1 focus:ring-cyan-500/50 transition-all border border-white/5 placeholder:text-slate-600`}
           />
         </div>
       </header>
@@ -105,54 +114,45 @@ export default function SignalControl() {
                 <div className="flex items-start justify-between">
                   <div>
                     <div className="flex items-center gap-2 mb-2">
-                      <span className={`w-2 h-2 rounded-full ${signal.mode === 'auto' ? 'bg-cyan-500 shadow-[0_0_8px_#06b6d4]' : 'bg-amber-500 shadow-[0_0_8px_#f59e0b]'}`} />
-                      <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
-                        {signal.mode} Control Mode
-                      </span>
+                       <span className={`w-2 h-2 rounded-full ${signal.mode === 'auto' ? 'bg-cyan-500 shadow-[0_0_8px_#06b6d4]' : 'bg-amber-500 shadow-[0_0_8px_#f59e0b]'}`} />
+                       <span className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">
+                         {signal.mode === 'auto' ? t('auto') : t('manual')} {language === 'fa' ? 'حالت کنترل' : 'Control Mode'}
+                       </span>
                     </div>
                     <h3 className="text-xl md:text-2xl font-bold text-white">{camera.name}</h3>
                     <p className="text-[10px] md:text-xs font-medium text-slate-500 uppercase tracking-widest leading-none">{camera.location}</p>
                   </div>
                   
-                  <div className="relative group/tooltip">
-                    <div className="absolute -top-10 right-0 bg-slate-900 border border-white/10 px-3 py-2 rounded-lg text-[10px] whitespace-nowrap pointer-events-none opacity-0 group-hover/tooltip:opacity-100 transition-opacity z-20 shadow-2xl">
-                      Export signal event logs (.csv)
-                    </div>
-                    <button 
-                      onClick={() => handleExportCSV(camera)}
-                      className="p-2.5 md:p-3 glass-dark hover:bg-white/5 text-slate-500 hover:text-cyan-400 rounded-xl md:rounded-2xl border border-white/5 transition-all shadow-xl active:scale-90"
-                    >
-                      <Download size={18} />
-                    </button>
-                  </div>
+                  <button 
+                    onClick={() => handleExportCSV(camera)}
+                    className="p-2.5 md:p-3 glass-dark hover:bg-white/5 text-slate-500 hover:text-cyan-400 rounded-xl md:rounded-2xl border border-white/5 transition-all shadow-xl active:scale-90"
+                    title="Export CSV"
+                  >
+                    <Download size={18} />
+                  </button>
                 </div>
 
                 <div className="flex gap-4">
                   <div className="flex-1 glass-dark p-3 md:p-4 rounded-xl md:rounded-2xl border border-white/5 flex flex-col items-center justify-center gap-1 group/tooltip relative group-hover:bg-white/5 transition-colors">
-                    <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-slate-900 border border-white/10 px-3 py-2 rounded-lg text-[10px] w-32 text-center pointer-events-none opacity-0 group-hover/tooltip:opacity-100 transition-opacity z-20 shadow-2xl">
-                      Next phase transition countdown
-                    </div>
                     <Timer size={18} className="text-slate-500" />
-                    <span className="text-xl md:text-2xl font-black text-white font-mono leading-none">{signal.duration}s</span>
-                    <span className="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Cycle Delta</span>
+                    <span className="text-xl md:text-2xl font-black text-white font-mono leading-none tracking-normal">{signal.duration}s</span>
+                    <span className="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-tighter">
+                      {language === 'fa' ? 'تایمر چرخه' : 'Cycle Delta'}
+                    </span>
                   </div>
                   <div className="flex-1 glass-dark p-3 md:p-4 rounded-xl md:rounded-2xl border border-white/5 flex flex-col items-center justify-center gap-1 group/tooltip relative group-hover:bg-white/5 transition-colors">
-                    <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-slate-900 border border-white/10 px-3 py-2 rounded-lg text-[10px] w-32 text-center pointer-events-none opacity-0 group-hover/tooltip:opacity-100 transition-opacity z-20 shadow-2xl">
-                      Real-time lane density (Neural)
-                    </div>
                     <Activity size={18} className="text-slate-500" />
-                    <span className="text-xl md:text-2xl font-black text-cyan-400 font-mono leading-none">74%</span>
-                    <span className="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Current Load</span>
+                    <span className="text-xl md:text-2xl font-black text-cyan-400 font-mono leading-none tracking-normal">74%</span>
+                    <span className="text-[9px] md:text-[10px] font-bold text-slate-500 uppercase tracking-tighter">
+                      {language === 'fa' ? 'تراکم فعلی' : 'Current Load'}
+                    </span>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-3 gap-2 md:gap-3">
                   {(['red', 'yellow', 'green'] as const).map(color => (
-                    <div key={color} className="relative group/tooltip">
-                      <div className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-900 border border-white/10 px-3 py-2 rounded-lg text-[10px] whitespace-nowrap pointer-events-none opacity-0 group-hover/tooltip:opacity-100 transition-opacity z-20 shadow-2xl">
-                        {color === 'red' ? 'Force stop' : color === 'yellow' ? 'Transition' : 'Authorize'}
-                      </div>
-                      <button
+                    <button
+                        key={color}
                         onClick={() => handleManualOverride(camera.id, color)}
                         className={`w-full py-2.5 md:py-3.5 rounded-xl font-black text-[9px] md:text-[10px] uppercase tracking-[0.15em] transition-all relative overflow-hidden ${
                           signal.state === color 
@@ -160,9 +160,8 @@ export default function SignalControl() {
                           : 'bg-white/5 text-slate-500 hover:bg-white/10'
                         }`}
                       >
-                        {color}
+                         {color === 'red' ? t('red') : color === 'yellow' ? t('yellow') : t('green')}
                       </button>
-                    </div>
                   ))}
                 </div>
               </div>
@@ -218,8 +217,12 @@ export default function SignalControl() {
               <Search size={32} />
             </div>
             <div>
-              <p className="text-white font-bold tracking-tight uppercase text-xs">No Signal Nodes Found</p>
-              <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] mt-1">Refine your search parameters or check system connectivity</p>
+              <p className="text-white font-bold tracking-tight uppercase text-xs">
+                {language === 'fa' ? 'گره سیگنالی پیدا نشد' : 'No Signal Nodes Found'}
+              </p>
+              <p className="text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] mt-1">
+                {language === 'fa' ? 'پارامترهای جستجو را اصلاح کنید یا اتصال سیستم را بررسی کنید' : 'Refine your search parameters or check system connectivity'}
+              </p>
             </div>
           </div>
         )}
@@ -233,22 +236,23 @@ export default function SignalControl() {
                 <div className="p-3 glass-dark rounded-2xl text-cyan-400 border border-white/10">
                   <Zap size={24} className="animate-pulse" />
                 </div>
-                <h3 className="text-2xl font-bold tracking-tight">Adaptive Neural Logic</h3>
+                <h3 className="text-2xl font-bold tracking-tight">
+                   {language === 'fa' ? 'منطق عصبی تطبیقی' : 'Adaptive Neural Logic'}
+                </h3>
               </div>
               <p className="text-slate-400 max-w-xl text-sm leading-relaxed">
-                The centralized AI core dynamically modulates signal intervals based on vision-extracted density metrics. 
-                Urban flow efficiency has stabilized at <span className="text-cyan-400 font-bold font-mono">+28.4%</span> across the northern corridor.
+                {language === 'fa' 
+                  ? 'هسته مرکزی هوش مصنوعی به طور پویا فواصل سیگنال را بر اساس معیارهای تراکم استخراج شده از تصویر تنظیم می‌کند.'
+                  : 'The centralized AI core dynamically modulates signal intervals based on vision-extracted density metrics.'}
+                {language === 'fa' ? ' کارایی جریان شهری در کریدور شمالی پایدار شده است: ' : ' Urban flow efficiency has stabilized at '}
+                <span className="text-cyan-400 font-bold font-mono tracking-normal">+28.4%</span>
+                {language === 'fa' ? '.' : ''}
               </p>
           </div>
-          <div className="relative group/tooltip">
-            <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-slate-900 border border-white/10 px-4 py-2 rounded-xl text-[10px] w-48 text-center pointer-events-none opacity-0 group-hover/tooltip:opacity-100 transition-opacity z-20 shadow-2xl">
-              Reset neural timing models and synchronize intersection nodes
-            </div>
-            <button className="flex items-center gap-3 px-8 py-4 bg-white text-slate-950 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-cyan-400 transition-all active:scale-95 shadow-2xl">
+          <button className="flex items-center gap-3 px-8 py-4 bg-white text-slate-950 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-cyan-400 transition-all active:scale-95 shadow-2xl relative z-10">
               <RefreshCw size={18} />
-              System Recalibrate
-            </button>
-          </div>
+              {language === 'fa' ? 'کالیبراسیون مجدد سیستم' : 'System Recalibrate'}
+          </button>
         </div>
       </div>
     </div>

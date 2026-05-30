@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Camera, Plus, Trash2, Edit2, Shield, Settings, Database, Activity, Search } from 'lucide-react';
 import { motion } from 'motion/react';
 import api from '../lib/api';
+import { useLanguage } from '../locales/LanguageContext';
 
 export default function AdminPanel() {
+  const { t, language } = useLanguage();
   const [cameras, setCameras] = useState<any[]>([]);
   const [newCam, setNewCam] = useState({ name: '', location: '', videoUrl: '' });
   const [searchQuery, setSearchQuery] = useState('');
@@ -40,7 +42,7 @@ export default function AdminPanel() {
   );
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to remove this camera?')) return;
+    if (!confirm(language === 'fa' ? 'آیا از حذف این دوربین اطمینان دارید؟' : 'Are you sure you want to remove this camera?')) return;
     try {
       await api.delete(`/cameras/${id}`);
       fetchCameras();
@@ -54,16 +56,25 @@ export default function AdminPanel() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 py-4 border-b border-white/10">
         <div>
           <div className="flex items-center gap-2 mb-3">
-            <div className="px-2 py-0.5 glass text-cyan-400 text-[9px] font-black uppercase tracking-[0.2em] rounded">Root Privileges</div>
+            <div className="px-2 py-0.5 glass text-cyan-400 text-[9px] font-black uppercase tracking-[0.2em] rounded">
+              {language === 'fa' ? 'دسترسی ریشه' : 'Root Privileges'}
+            </div>
             <Shield size={14} className="text-cyan-500" />
           </div>
-          <h2 className="text-3xl font-light text-white italic">Node <span className="font-bold not-italic">Infrastructure Console</span></h2>
-          <p className="text-slate-500 text-sm">Configure camera telemetry, user access, and system kernel parameters.</p>
+          <h2 className="text-3xl font-light text-white italic">
+            {language === 'fa' ? 'کنسول ' : 'Node '}
+            <span className="font-bold not-italic text-cyan-400">
+              {language === 'fa' ? 'زیرساخت گره' : 'Infrastructure Console'}
+            </span>
+          </h2>
+          <p className="text-slate-500 text-sm">
+            {language === 'fa' ? 'پیکربندی تله‌متری دوربین، دسترسی کاربران و پارامترهای اصلی سیستم.' : 'Configure camera telemetry, user access, and system kernel parameters.'}
+          </p>
         </div>
         <div className="flex gap-4">
            <button className="flex items-center gap-2 px-6 py-3 glass-dark text-white rounded-xl text-xs font-black uppercase tracking-widest hover:bg-white/10 transition-all shadow-2xl border border-white/5">
              <Settings size={18} />
-             Kernel Config
+             {language === 'fa' ? 'پیکربندی هسته' : 'Kernel Config'}
            </button>
         </div>
       </div>
@@ -75,19 +86,21 @@ export default function AdminPanel() {
               <div className="flex items-center gap-3">
                 <h3 className="text-lg font-bold flex items-center gap-3">
                   <Camera size={20} className="text-cyan-400" />
-                  System Nodes
+                  {language === 'fa' ? 'گره‌های سیستم' : 'System Nodes'}
                 </h3>
-                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{filteredCameras.length} Active Modules</span>
+                <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
+                  {filteredCameras.length} {language === 'fa' ? 'ماژول فعال' : 'Active Modules'}
+                </span>
               </div>
               
               <div className="relative group w-full md:w-64">
-                <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-cyan-400 transition-colors" />
+                <Search size={16} className={`absolute ${language === 'fa' ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-cyan-400 transition-colors`} />
                 <input 
                   type="text"
-                  placeholder="Search nodes or sectors..."
+                  placeholder={language === 'fa' ? 'جستجوی گره یا بخش...' : 'Search nodes or sectors...'}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-11 pr-4 py-2.5 glass-dark rounded-xl text-xs font-medium focus:outline-none focus:ring-1 focus:ring-cyan-500/50 transition-all border border-white/5"
+                  className={`w-full ${language === 'fa' ? 'pr-11 pl-4' : 'pl-11 pr-4'} py-2.5 glass-dark rounded-xl text-xs font-medium focus:outline-none focus:ring-1 focus:ring-cyan-500/50 transition-all border border-white/5`}
                 />
               </div>
             </div>
@@ -125,41 +138,47 @@ export default function AdminPanel() {
              <div className="absolute top-0 right-0 w-24 h-24 bg-cyan-500/10 blur-3xl -mr-12 -mt-12" />
              <h3 className="text-sm font-black uppercase tracking-widest text-slate-500 mb-8 flex items-center gap-2 relative z-10">
                <Plus size={20} className="text-cyan-400" />
-               Provision Module
+               {language === 'fa' ? 'ایجاد ماژول' : 'Provision Module'}
              </h3>
              <form onSubmit={handleAddCamera} className="space-y-6 relative z-10">
                <div className="space-y-2">
-                  <label className="text-[9px] font-black uppercase text-slate-600 pl-1 tracking-[0.2em]">Node Identifier</label>
+                  <label className="text-[9px] font-black uppercase text-slate-600 pl-1 tracking-[0.2em]">
+                    {language === 'fa' ? 'شناسه گره' : 'Node Identifier'}
+                  </label>
                   <input 
                     value={newCam.name}
                     onChange={e => setNewCam({...newCam, name: e.target.value})}
                     placeholder="Intersection 084-Delta"
-                    className="w-full px-5 py-4 glass-dark text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500/30 transition-all font-mono text-sm placeholder:text-slate-700" 
+                    className="w-full px-5 py-4 glass-dark text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500/30 transition-all font-mono text-sm placeholder:text-slate-700 tracking-normal" 
                   />
                </div>
                <div className="space-y-2">
-                  <label className="text-[9px] font-black uppercase text-slate-600 pl-1 tracking-[0.2em]">Sector Assignment</label>
+                  <label className="text-[9px] font-black uppercase text-slate-600 pl-1 tracking-[0.2em]">
+                    {language === 'fa' ? 'تخصیص بخش' : 'Sector Assignment'}
+                  </label>
                   <input 
                     value={newCam.location}
                     onChange={e => setNewCam({...newCam, location: e.target.value})}
                     placeholder="Downtown Quadrant 4"
-                    className="w-full px-5 py-4 glass-dark text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500/30 transition-all font-mono text-sm placeholder:text-slate-700" 
+                    className="w-full px-5 py-4 glass-dark text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500/30 transition-all font-mono text-sm placeholder:text-slate-700 tracking-normal" 
                   />
                </div>
                <div className="space-y-2">
-                  <label className="text-[9px] font-black uppercase text-slate-600 pl-1 tracking-[0.2em]">Telemetry Source</label>
+                  <label className="text-[9px] font-black uppercase text-slate-600 pl-1 tracking-[0.2em]">
+                    {language === 'fa' ? 'منبع تله‌متری' : 'Telemetry Source'}
+                  </label>
                   <input 
                     value={newCam.videoUrl}
                     onChange={e => setNewCam({...newCam, videoUrl: e.target.value})}
                     placeholder="rtsp://neural.hub/node84"
-                    className="w-full px-5 py-4 glass-dark text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500/30 transition-all font-mono text-sm placeholder:text-slate-700" 
+                    className="w-full px-5 py-4 glass-dark text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-cyan-500/30 transition-all font-mono text-sm placeholder:text-slate-700 tracking-normal" 
                   />
                </div>
                <button 
                  disabled={loading}
                  className="w-full py-4 bg-cyan-500 hover:bg-cyan-400 text-slate-950 rounded-2xl font-black uppercase tracking-widest text-xs shadow-[0_0_20px_rgba(6,182,212,0.3)] transition-all active:scale-95 disabled:opacity-50"
                >
-                 {loading ? 'Processing Protocol...' : 'Initialize Node'}
+                 {loading ? (language === 'fa' ? 'در حال پردازش...' : 'Processing Protocol...') : (language === 'fa' ? 'راه‌اندازی گره' : 'Initialize Node')}
                </button>
              </form>
            </div>
@@ -168,19 +187,19 @@ export default function AdminPanel() {
               <div className="absolute bottom-0 right-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl -mb-16 -mr-16" />
               <h3 className="text-sm font-black uppercase tracking-widest text-slate-500 flex items-center gap-3">
                 <Database size={18} className="text-indigo-400" />
-                Telemetry Vault
+                {language === 'fa' ? 'خزانه تله‌متری' : 'Telemetry Vault'}
               </h3>
               <div className="space-y-4 relative z-10">
                  {[
-                   { label: 'Storage Cluster', val: '4.2 TB', icon: Activity },
-                   { label: 'Neural Uplink', val: 'Active', icon: Shield },
+                   { label: language === 'fa' ? 'کلاستر ذخیره‌سازی' : 'Storage Cluster', val: '4.2 TB', icon: Activity },
+                   { label: language === 'fa' ? 'آپ‌لینک عصبی' : 'Neural Uplink', val: language === 'fa' ? 'فعال' : 'Active', icon: Shield },
                  ].map(item => (
                    <div key={item.label} className="flex items-center justify-between p-4 glass rounded-2xl border border-white/5 hover:bg-white/10 transition-colors">
                       <div className="flex items-center gap-3">
                         <item.icon size={16} className="text-slate-500" />
                         <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">{item.label}</span>
                       </div>
-                      <span className="text-sm font-bold font-mono text-white">{item.val}</span>
+                      <span className="text-sm font-bold font-mono text-white tracking-normal">{item.val}</span>
                    </div>
                  ))}
               </div>
