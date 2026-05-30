@@ -133,11 +133,11 @@ export default function Analytics() {
           <h3 className="text-sm font-black uppercase text-slate-500 tracking-[0.2em] mb-8 font-mono">Real-time Load Variance</h3>
           <div className="h-[300px]">
              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={data.slice(8, 16)}>
+                <BarChart data={(Array.isArray(data) ? data : []).slice(8, 16)}>
                   <XAxis dataKey="hour" axisLine={false} tickLine={false} hide />
                   <Tooltip cursor={{fill: 'rgba(255,255,255,0.03)'}} />
                   <Bar dataKey="count" radius={[8, 8, 8, 8]}>
-                    {data.slice(8, 16).map((entry, index) => (
+                    {(Array.isArray(data) ? data : []).slice(8, 16).map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.count > 500 ? 'rgba(239, 68, 68, 0.6)' : 'rgba(6, 182, 212, 0.4)'} />
                     ))}
                   </Bar>

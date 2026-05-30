@@ -26,7 +26,7 @@ export default function Home() {
       setCameras(cameraData);
       setStats(prev => ({ 
         ...prev, 
-        activeCameras: cameraData.filter((c: any) => c.status === 'active').length 
+        activeCameras: (Array.isArray(cameraData) ? cameraData : []).filter((c: any) => c.status === 'active').length 
       }));
       
       // Initialize stats safely
@@ -83,7 +83,7 @@ export default function Home() {
   }, []);
 
   const sortedCameras = useMemo(() => {
-    return [...cameras].sort((a, b) => {
+    return [...(Array.isArray(cameras) ? cameras : [])].sort((a, b) => {
       const densityA = cameraStats[a.id]?.density || 0;
       const densityB = cameraStats[b.id]?.density || 0;
       return densityB - densityA;
@@ -91,7 +91,7 @@ export default function Home() {
   }, [cameras, cameraStats]);
 
   const heatmapPoints = useMemo(() => {
-    return cameras.map((cam, index) => {
+    return (Array.isArray(cameras) ? cameras : []).map((cam, index) => {
       // Mock coordinates distributed across a grid
       const x = 20 + (index % 3) * 30 + (Math.sin(index) * 5);
       const y = 20 + Math.floor(index / 3) * 40 + (Math.cos(index) * 5);
@@ -183,7 +183,7 @@ export default function Home() {
             </div>
 
             <div className="absolute inset-0 z-0 opacity-40">
-              {heatmapPoints.map((point) => (
+              {(Array.isArray(heatmapPoints) ? heatmapPoints : []).map((point) => (
                 <motion.div
                   key={point.id}
                   initial={false}
@@ -221,7 +221,7 @@ export default function Home() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
               <AnimatePresence mode="popLayout">
-                {sortedCameras.map((camera) => (
+                {(Array.isArray(sortedCameras) ? sortedCameras : []).map((camera) => (
                   <motion.div
                     layout
                     key={camera.id}

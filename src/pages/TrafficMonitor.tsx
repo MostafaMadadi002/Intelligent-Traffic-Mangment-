@@ -53,13 +53,13 @@ export default function TrafficMonitor() {
     }
   }, [selectedCamera]);
 
-  const filteredCameras = cameras.filter(cam => {
+  const filteredCameras = (Array.isArray(cameras) ? cameras : []).filter(cam => {
     const matchStatus = statusFilter === 'all' || cam.status === statusFilter;
     const matchLocation = locationFilter === 'all' || cam.location === locationFilter;
     return matchStatus && matchLocation;
   });
 
-  const locations = Array.from(new Set(cameras.map(cam => cam.location))).filter(Boolean);
+  const locations = Array.from(new Set((Array.isArray(cameras) ? cameras : []).map(cam => cam.location))).filter(Boolean);
 
   return (
     <div className="space-y-8">
@@ -101,7 +101,7 @@ export default function TrafficMonitor() {
           </div>
 
           <div className="flex gap-2 glass-dark p-1.5 rounded-2xl border border-white/5 shadow-2xl overflow-x-auto no-scrollbar max-w-full">
-            {filteredCameras.map(cam => (
+            {(Array.isArray(filteredCameras) ? filteredCameras : []).map(cam => (
               <button
                 key={cam.id}
                 onClick={() => setSelectedCamera(cam)}
@@ -258,7 +258,7 @@ export default function TrafficMonitor() {
              <div className="absolute top-0 right-0 w-24 h-24 bg-cyan-500/10 blur-3xl -mr-12 -mt-12" />
             <h3 className="text-xs font-black text-slate-500 uppercase tracking-[0.3em] mb-6 relative z-10">Event Ledger</h3>
             <div className="space-y-6 relative z-10">
-              {history.map((log, i) => (
+              {(Array.isArray(history) ? history : []).map((log, i) => (
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1 - i * 0.2, x: 0 }}
