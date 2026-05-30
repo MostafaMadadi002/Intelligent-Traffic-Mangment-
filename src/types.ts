@@ -44,9 +44,3 @@ export interface User {
   email: string;
   role: 'admin' | 'operator';
 }
-
-export interface AuthState {
-  user: User | null;
-  token: string | null;
-  isAuthenticated: boolean;
-}

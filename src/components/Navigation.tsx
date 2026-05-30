@@ -8,7 +8,6 @@ export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const isAuthenticated = !!localStorage.getItem('traffic_token');
 
   const navItems = [
     { name: 'Dashboard', path: '/', icon: LayoutDashboard },
@@ -17,11 +16,6 @@ export default function Navigation() {
     { name: 'Analytics', path: '/analytics', icon: MapPin },
     { name: 'Admin Panel', path: '/admin', icon: Settings },
   ];
-
-  const handleLogout = () => {
-    // Logout disabled per user request
-    setIsOpen(false);
-  };
 
   useEffect(() => {
     setIsOpen(false);
@@ -77,15 +71,8 @@ export default function Navigation() {
   );
 
   const UserSection = () => {
-    let user = null;
-    try {
-      const userStr = localStorage.getItem('traffic_user');
-      user = userStr ? JSON.parse(userStr) : null;
-    } catch (e) {
-      console.warn('Failed to parse user from localStorage', e);
-    }
-    const displayName = user?.name || 'System Admin';
-    const initials = displayName.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2);
+    const displayName = 'System Admin';
+    const initials = 'SA';
 
     return (
       <div className="pt-6 border-t border-white/5 space-y-4">
@@ -94,7 +81,7 @@ export default function Navigation() {
             {initials}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-0.5">Authorized Operative</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-0.5">System Operative</p>
             <p className="text-xs font-bold text-white truncate">{displayName}</p>
             <p className="text-[9px] text-cyan-400/80 uppercase font-black tracking-[0.15em] mt-1.5 flex items-center gap-1">
                Status: Node Active

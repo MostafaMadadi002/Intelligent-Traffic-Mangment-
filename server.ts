@@ -114,26 +114,6 @@ function seedData() {
 }
 seedData();
 
-// --- Authentication Middleware ---
-const authenticateToken = (req: any, res: any, next: any) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-
-  if (!token) return res.sendStatus(401);
-
-  // Allow bypass token for simplified auth-free mode
-  if (token === 'bypass-active') {
-    req.user = { email: 'admin@cluster.io', role: 'admin' };
-    return next();
-  }
-
-  jwt.verify(token, JWT_SECRET, (err: any, user: any) => {
-    if (err) return res.sendStatus(403);
-    req.user = user;
-    next();
-  });
-};
-
 // --- API Routes ---
 
 // Simulation Control
@@ -141,7 +121,7 @@ app.get('/api/simulation/status', (req, res) => {
   res.json(db.simulation);
 });
 
-app.post('/api/simulation/control', authenticateToken, (req, res) => {
+app.post('/api/simulation/control', (req, res) => {
   const { pattern, intensity, isActive } = req.body;
   
   if (pattern) db.simulation.pattern = pattern;
@@ -165,47 +145,12 @@ app.get('/api/cameras/:id/stream', (req, res) => {
   });
 });
 
-// Auth
-app.post('/api/auth/login', async (req, res) => {
-  const { email, password } = req.body;
-  
-  if (!email || !password) {
-    return res.status(400).json({ message: 'Email and password are required' });
-  }
-
-  // Hardcoded fallback admin for demo
-  if (email === 'admin@example.com' && password === 'admin123') {
-    const token = jwt.sign({ email, role: 'admin' }, JWT_SECRET);
-    return res.json({ token, user: { email, role: 'admin' } });
-  }
-  
-  try {
-    if (fdb) {
-      const userSnapshot = await fdb.collection('users').where('email', '==', email).limit(1).get();
-      
-      if (!userSnapshot.empty) {
-        const userData = userSnapshot.docs[0].data();
-        
-        // Check password (In real world, use bcrypt.compare)
-        if (userData.password === password) {
-          const token = jwt.sign({ email: userData.email, role: userData.role }, JWT_SECRET);
-          return res.json({ token, user: { email: userData.email, role: userData.role } });
-        }
-      }
-    }
-  } catch (err) {
-    console.error('Login error (Firestore):', err);
-  }
-
-  res.status(401).json({ message: 'Invalid credentials' });
-});
-
 // Cameras
 app.get('/api/cameras', async (req, res) => {
   res.json(db.cameras);
 });
 
-app.post('/api/cameras', authenticateToken, async (req, res) => {
+app.post('/api/cameras', async (req, res) => {
   const id = `cam-${Date.now()}`;
   const newCamera = { id, ...req.body, status: 'active', createdAt: new Date() };
   db.cameras.push(newCamera);
@@ -214,7 +159,7 @@ app.post('/api/cameras', authenticateToken, async (req, res) => {
   res.status(201).json(newCamera);
 });
 
-app.delete('/api/cameras/:id', authenticateToken, async (req, res) => {
+app.delete('/api/cameras/:id', async (req, res) => {
   db.cameras = db.cameras.filter(c => c.id !== req.params.id);
   delete db.signals[req.params.id];
   res.sendStatus(204);
@@ -225,7 +170,7 @@ app.get('/api/signals', async (req, res) => {
   res.json(db.signals);
 });
 
-app.post('/api/signals/override', authenticateToken, async (req, res) => {
+app.post('/api/signals/override', async (req, res) => {
   const { cameraId, state, duration } = req.body;
   const update = { 
     state, 
