@@ -65,8 +65,10 @@ export default function SignalControl() {
   };
 
   const filteredCameras = (Array.isArray(cameras) ? cameras : []).filter(cam => 
-    cam.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    cam.location?.toLowerCase().includes(searchQuery.toLowerCase())
+    cam && (
+      cam.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      cam.location?.toLowerCase().includes(searchQuery.toLowerCase())
+    )
   );
 
   return (
@@ -91,6 +93,7 @@ export default function SignalControl() {
 
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 md:gap-8">
         {(Array.isArray(filteredCameras) ? filteredCameras : []).map(camera => {
+          if (!camera) return null;
           const signal = signals[camera.id] || { state: 'red', duration: 30, mode: 'auto' };
           return (
             <motion.div

@@ -83,26 +83,30 @@ export default function Home() {
   }, []);
 
   const sortedCameras = useMemo(() => {
-    return [...(Array.isArray(cameras) ? cameras : [])].sort((a, b) => {
-      const densityA = cameraStats[a.id]?.density || 0;
-      const densityB = cameraStats[b.id]?.density || 0;
-      return densityB - densityA;
-    });
+    return [...(Array.isArray(cameras) ? cameras : [])]
+      .filter(c => !!c)
+      .sort((a, b) => {
+        const densityA = cameraStats[a.id]?.density || 0;
+        const densityB = cameraStats[b.id]?.density || 0;
+        return densityB - densityA;
+      });
   }, [cameras, cameraStats]);
 
   const heatmapPoints = useMemo(() => {
-    return (Array.isArray(cameras) ? cameras : []).map((cam, index) => {
-      // Mock coordinates distributed across a grid
-      const x = 20 + (index % 3) * 30 + (Math.sin(index) * 5);
-      const y = 20 + Math.floor(index / 3) * 40 + (Math.cos(index) * 5);
-      return {
-        id: cam.id,
-        x: `${x}%`,
-        y: `${y}%`,
-        density: cameraStats[cam.id]?.density || 0,
-        name: cam.name
-      };
-    });
+    return (Array.isArray(cameras) ? cameras : [])
+      .filter(cam => !!cam)
+      .map((cam, index) => {
+        // Mock coordinates distributed across a grid
+        const x = 20 + (index % 3) * 30 + (Math.sin(index) * 5);
+        const y = 20 + Math.floor(index / 3) * 40 + (Math.cos(index) * 5);
+        return {
+          id: cam.id,
+          x: `${x}%`,
+          y: `${y}%`,
+          density: cameraStats[cam.id]?.density || 0,
+          name: cam.name
+        };
+      });
   }, [cameras, cameraStats]);
 
   const getHeatColor = (density: number) => {
@@ -221,7 +225,7 @@ export default function Home() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 relative z-10">
               <AnimatePresence mode="popLayout">
-                {(Array.isArray(sortedCameras) ? sortedCameras : []).map((camera) => (
+                {(Array.isArray(sortedCameras) ? sortedCameras : []).map((camera) => camera && (
                   <motion.div
                     layout
                     key={camera.id}

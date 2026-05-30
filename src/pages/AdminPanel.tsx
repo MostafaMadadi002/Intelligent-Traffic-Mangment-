@@ -33,8 +33,10 @@ export default function AdminPanel() {
   };
 
   const filteredCameras = (Array.isArray(cameras) ? cameras : []).filter(cam => 
-    cam.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    cam.location?.toLowerCase().includes(searchQuery.toLowerCase())
+    cam && (
+      cam.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+      cam.location?.toLowerCase().includes(searchQuery.toLowerCase())
+    )
   );
 
   const handleDelete = async (id: string) => {
@@ -90,7 +92,7 @@ export default function AdminPanel() {
               </div>
             </div>
             <div className="divide-y divide-white/5">
-              {(Array.isArray(filteredCameras) ? filteredCameras : []).map(cam => (
+            {(Array.isArray(filteredCameras) ? filteredCameras : []).map(cam => cam && (
                 <div key={cam.id} className="p-6 flex items-center justify-between hover:bg-white/5 transition-all group">
                   <div className="flex items-center gap-5">
                     <div className="w-14 h-14 glass-dark rounded-2xl flex items-center justify-center text-slate-500 group-hover:text-cyan-400 transition-colors">

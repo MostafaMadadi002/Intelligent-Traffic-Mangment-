@@ -90,7 +90,7 @@ export default function Analytics() {
 
         <div className="h-[400px] w-full relative z-10">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={data}>
+            <AreaChart data={Array.isArray(data) ? data : []}>
               <defs>
                 <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.3}/>
@@ -137,8 +137,8 @@ export default function Analytics() {
                   <XAxis dataKey="hour" axisLine={false} tickLine={false} hide />
                   <Tooltip cursor={{fill: 'rgba(255,255,255,0.03)'}} />
                   <Bar dataKey="count" radius={[8, 8, 8, 8]}>
-                    {(Array.isArray(data) ? data : []).slice(8, 16).map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.count > 500 ? 'rgba(239, 68, 68, 0.6)' : 'rgba(6, 182, 212, 0.4)'} />
+                    {(Array.isArray(data) ? data : []).slice(8, 16).map((entry, index) => entry && (
+                      <Cell key={`cell-${index}`} fill={(entry.count || 0) > 500 ? 'rgba(239, 68, 68, 0.6)' : 'rgba(6, 182, 212, 0.4)'} />
                     ))}
                   </Bar>
                 </BarChart>
